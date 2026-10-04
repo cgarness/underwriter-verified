@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { CalendarDays, Send } from "lucide-react";
+import { CalendarDays, FileText, PhoneCall } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useAgentData } from "@/contexts/AgentDataContext";
@@ -7,6 +7,8 @@ import { useAgentData } from "@/contexts/AgentDataContext";
 export default function ContactSection() {
   const ref = useScrollReveal();
   const { data } = useAgentData();
+  const { agencySlug, agentSlug } = useParams<{ agencySlug: string; agentSlug: string }>();
+  const bookPath = agencySlug && agentSlug ? `/${agencySlug}/${agentSlug}/bookcall` : null;
 
   return (
     <section id="contact" className="py-20 md:py-28">
@@ -25,56 +27,69 @@ export default function ContactSection() {
               </a>
             </Button>
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-              Want a call or text instead? Use the quote form above and check the optional SMS box.
-              This message form does not opt you in to text messages.
+              Two ways to reach {data.name}: request a quote or request a call. Both forms save your
+              request. Their text-message boxes are optional, start unchecked, and are not required.
+              Opening either page does not opt you in to text messages.
             </p>
           </div>
 
-          <ContactForm />
+          <div className="space-y-4 rounded-2xl bg-card p-7 shadow-sm ring-1 ring-border/60">
+            <ContactPath
+              icon={<FileText size={18} />}
+              title="Request a free quote"
+              body="Share your name, contact details, and state. The quote form is on this page."
+              cta={
+                <Button variant="outline" size="lg" className="w-full" asChild>
+                  <a href="#free-quote">Go to the quote form</a>
+                </Button>
+              }
+            />
+            <ContactPath
+              icon={<PhoneCall size={18} />}
+              title="Request a call"
+              body="Ask for a call back. A request is not a scheduled appointment until a time is set with you."
+              cta={
+                bookPath ? (
+                  <Button variant="hero" size="lg" className="w-full" asChild>
+                    <Link to={bookPath}>Open the call request form</Link>
+                  </Button>
+                ) : (
+                  <Button variant="hero" size="lg" className="w-full" asChild>
+                    <a href="#free-quote">Use the quote form</a>
+                  </Button>
+                )
+              }
+            />
+            <p className="text-xs text-muted-foreground">
+              Requesting contact does not opt you in to text messages. SMS permission is only
+              recorded from the separate checkboxes on those forms.
+            </p>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function ContactForm() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setForm({ ...form, [e.target.name]: e.target.value });
-
+function ContactPath({
+  icon,
+  title,
+  body,
+  cta,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  body: string;
+  cta: React.ReactNode;
+}) {
   return (
-    <form
-      onSubmit={(e) => e.preventDefault()}
-      className="space-y-4 rounded-2xl bg-card p-7 shadow-sm ring-1 ring-border/60"
-    >
-      <FormInput name="name" placeholder="Your Name" value={form.name} onChange={handleChange} />
-      <FormInput name="email" type="email" placeholder="Email Address" value={form.email} onChange={handleChange} />
-      <textarea
-        name="message"
-        rows={4}
-        placeholder="How can I help?"
-        value={form.message}
-        onChange={handleChange}
-        className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-      />
-      <p className="text-xs text-muted-foreground">
-        Submitting this form does not subscribe you to SMS. Reply STOP on any text to opt out.
-      </p>
-      <Button variant="hero" size="lg" type="submit" className="w-full">
-        <Send size={16} />
-        Send Message
-      </Button>
-    </form>
-  );
-}
-
-function FormInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <input
-      {...props}
-      className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-    />
+    <div className="space-y-3 rounded-xl border border-border/60 p-4">
+      <div className="flex items-center gap-2 text-foreground">
+        <span className="text-accent">{icon}</span>
+        <h3 className="text-base font-semibold">{title}</h3>
+      </div>
+      <p className="text-sm text-muted-foreground">{body}</p>
+      {cta}
+    </div>
   );
 }

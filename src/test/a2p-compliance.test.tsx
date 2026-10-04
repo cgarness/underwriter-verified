@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AgentDataProvider } from "@/contexts/AgentDataContext";
 import SmsOptInForm from "@/components/SmsOptInForm";
+import { CANONICAL_AGENCY_SLUG, CANONICAL_AGENT_SLUG } from "@/lib/a2pBrand";
 import Footer from "@/components/Footer";
 import LegalSection from "@/components/LegalSection";
 import ContactSection from "@/components/ContactSection";
@@ -35,26 +36,43 @@ function renderWithProviders(ui: ReactElement, path = "/") {
   );
 }
 
-describe("A2P campaign surfaces", () => {
-  it("shows required SMS opt-in disclosures on the quote form", () => {
-    renderWithProviders(<SmsOptInForm />);
+const quoteForm = (
+  <SmsOptInForm
+    agentName="Christopher Garness"
+    agencyName="CG Financial"
+    agencySlug={CANONICAL_AGENCY_SLUG}
+    agentSlug={CANONICAL_AGENT_SLUG}
+    pagePath="/sms-opt-in"
+    privacyHref="/cg-financial/christopher-garness/privacy-policy"
+    termsHref="/cg-financial/christopher-garness/terms-and-conditions"
+  />
+);
 
+describe("A2P campaign surfaces", () => {
+  it("shows separate unchecked SMS choices on the quote form", () => {
+    renderWithProviders(quoteForm);
+
+    const informational = screen.getByRole("checkbox", { name: /informational SMS\/MMS/i });
+    const marketing = screen.getByRole("checkbox", { name: /marketing SMS\/MMS/i });
+    expect(informational).not.toBeChecked();
+    expect(marketing).not.toBeChecked();
     expect(screen.getAllByText(/Christopher Garness/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/CG Financial/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/message and data rates may apply/i)).toBeInTheDocument();
-    expect(screen.getByText(/message frequency may vary/i)).toBeInTheDocument();
+    expect(screen.getByText(/message frequency varies/i)).toBeInTheDocument();
     expect(screen.getByText(/STOP/)).toBeInTheDocument();
     expect(screen.getByText(/HELP/)).toBeInTheDocument();
-    expect(screen.getByText(/consent is not required/i)).toBeInTheDocument();
+    expect(screen.getByText(/SMS consent is not required/i)).toBeInTheDocument();
     expect(document.body.textContent).toMatch(/Carriers are not liable for any delayed or undelivered messages/i);
-    expect(screen.getByRole("link", { name: /privacy policy/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /privacy-policy/i })).toHaveAttribute(
       "href",
-      "/privacy-policy"
+      "/cg-financial/christopher-garness/privacy-policy"
     );
-    expect(screen.getByRole("link", { name: /terms and conditions/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /terms-and-conditions/i })).toHaveAttribute(
       "href",
-      "/terms-and-conditions"
+      "/cg-financial/christopher-garness/terms-and-conditions"
     );
+    expect(screen.queryByText(/calls, SMS\/MMS, and emails/i)).not.toBeInTheDocument();
   });
 
   it("puts privacy and terms links in the agent footer", () => {
@@ -66,11 +84,28 @@ describe("A2P campaign surfaces", () => {
     expect(document.body.textContent).toMatch(/Carriers are not liable/i);
   });
 
-  it("does not collect a phone number on the contact form", () => {
-    renderWithProviders(<ContactSection />);
+  it("replaces the inactive message form with links to the real intake flows", () => {
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <AgentDataProvider>
+          <MemoryRouter initialEntries={["/cg-financial/christopher-garness"]}>
+            <Routes>
+              <Route path="/:agencySlug/:agentSlug" element={<ContactSection />} />
+            </Routes>
+          </MemoryRouter>
+        </AgentDataProvider>
+      </QueryClientProvider>
+    );
 
-    expect(document.querySelector('input[type="tel"]')).toBeNull();
-    expect(screen.getByText(/does not opt you in to text messages/i)).toBeInTheDocument();
+    expect(document.querySelector("form")).toBeNull();
+    expect(document.querySelector("input")).toBeNull();
+    expect(screen.queryByRole("button", { name: /send message/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /go to the quote form/i })).toHaveAttribute("href", "#free-quote");
+    expect(screen.getByRole("link", { name: /open the call request form/i })).toHaveAttribute(
+      "href",
+      "/cg-financial/christopher-garness/bookcall"
+    );
+    expect(screen.getAllByText(/does not opt you in to text messages/i).length).toBeGreaterThan(0);
   });
 
   it("points to one privacy policy instead of a second conflicting copy", () => {

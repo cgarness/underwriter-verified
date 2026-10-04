@@ -59,7 +59,12 @@ export default function Index() {
       <AboutSection />
       <ServicesSection />
       <TestimonialsSection />
-      <LeadCaptureSection />
+      <LeadCaptureSection
+        agentName={agent.name}
+        agencyName={agent.agency}
+        agencySlug={agencySlug ?? ""}
+        agentSlug={agentSlug ?? ""}
+      />
       <LegalSection />
       <ContactSection />
       <Footer />

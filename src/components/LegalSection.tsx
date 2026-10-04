@@ -14,11 +14,12 @@ export default function LegalSection() {
         <div>
           <h2 className="text-2xl font-bold text-foreground mb-4">Messaging Program</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            {sender} may send recurring automated marketing and informational text messages (SMS/MMS),
-            which may include appointment reminders, policy updates, quote follow-ups, and
-            promotional offers. Message frequency varies. Message and data rates may apply. Consent
-            is not a condition of purchase. Reply <strong>STOP</strong> to opt out. Reply{" "}
-            <strong>HELP</strong> for help. {CARRIER_LIABILITY_STATEMENT}
+            {sender} uses two optional SMS checkboxes. The informational box covers quote follow-ups,
+            appointment reminders, and application or policy updates. The marketing box covers life
+            insurance products and coverage reviews. Message frequency varies. Message and data rates
+            may apply. SMS consent is not required to request a quote, request a call, or purchase
+            insurance. Reply <strong>STOP</strong> to opt out. Reply <strong>HELP</strong> for help.{" "}
+            {CARRIER_LIABILITY_STATEMENT}
           </p>
           <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
             <strong>{SMS_NON_SHARING_STATEMENT}</strong>

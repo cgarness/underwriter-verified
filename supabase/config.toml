@@ -1,1 +1,3 @@
-project_id = "rtgmdbqzkwlmplurypyh"
+project_id = "jzdzeevjpootbeuniygx"
+[functions.generate-testimonials]
+verify_jwt = true

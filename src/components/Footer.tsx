@@ -17,10 +17,12 @@ export default function Footer() {
         <LegalNavLinks className="mt-4 flex items-center justify-center gap-4 text-xs text-muted-foreground" />
 
         <p className="mx-auto mt-4 max-w-2xl text-xs leading-relaxed text-muted-foreground">
-          {sender} may send recurring automated marketing and informational text messages. Message
-          frequency varies. Message and data rates may apply. Reply <strong>STOP</strong> to opt out.
-          Reply <strong>HELP</strong> for help. Consent is not a condition of purchase.{" "}
-          {CARRIER_LIABILITY_STATEMENT}
+          Text messages from {sender} are optional. This website does not send them. An informational
+          text is allowed only if you check the informational box. A marketing text is allowed only
+          if you check the marketing box.
+          Message frequency varies. Message and data rates may apply. Reply <strong>STOP</strong> to
+          opt out. Reply <strong>HELP</strong> for help. SMS consent is not required to request a
+          quote, request a call, or purchase insurance. {CARRIER_LIABILITY_STATEMENT}
         </p>
 
         <p className="mx-auto mt-6 max-w-2xl text-xs leading-relaxed text-muted-foreground">

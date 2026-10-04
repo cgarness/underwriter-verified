@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useAgentProfile } from "@/hooks/useAgentProfile";
-import { DEFAULT_BRAND, normalizeBrandText } from "@/lib/a2pBrand";
+import { CANONICAL_AGENCY_SLUG, CANONICAL_AGENT_SLUG, DEFAULT_BRAND, normalizeBrandText } from "@/lib/a2pBrand";
 
 export type LegalBrand = {
   name: string;
@@ -16,14 +16,17 @@ export function useLegalBrand() {
   const scoped = Boolean(agencySlug && agentSlug);
   const query = useAgentProfile(agencySlug, agentSlug);
 
+  const isCanonical =
+    agencySlug === CANONICAL_AGENCY_SLUG && agentSlug === CANONICAL_AGENT_SLUG;
+  const showSuppliedAddress = !scoped || isCanonical;
   const brand: LegalBrand = query.data
     ? {
-        name: normalizeBrandText(query.data.name) || DEFAULT_BRAND.name,
-        agency: normalizeBrandText(query.data.agency) || DEFAULT_BRAND.agency,
-        phone: normalizeBrandText(query.data.phone) || DEFAULT_BRAND.phone,
-        email: normalizeBrandText(query.data.email) || DEFAULT_BRAND.email,
-        addressLine1: DEFAULT_BRAND.addressLine1,
-        addressLine2: DEFAULT_BRAND.addressLine2,
+        name: normalizeBrandText(query.data.name),
+        agency: normalizeBrandText(query.data.agency),
+        phone: normalizeBrandText(query.data.phone),
+        email: normalizeBrandText(query.data.email),
+        addressLine1: showSuppliedAddress ? DEFAULT_BRAND.addressLine1 : "",
+        addressLine2: showSuppliedAddress ? DEFAULT_BRAND.addressLine2 : "",
       }
     : { ...DEFAULT_BRAND };
 

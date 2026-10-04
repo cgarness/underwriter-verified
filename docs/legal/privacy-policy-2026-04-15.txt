@@ -1,15 +1,12 @@
+Archive of the public page source that was effective April 15, 2026. Kept so later consent records can be compared with the wording that was live before the September 29, 2026 separate-consent update. Not a route.
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useLegalBrand } from "@/hooks/useLegalBrand";
 import { useLegalPaths } from "@/hooks/useLegalPaths";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import {
-  CARRIER_LIABILITY_STATEMENT,
-  PRIOR_POLICY_EFFECTIVE_LABEL,
-  PRIVACY_EFFECTIVE_LABEL,
-  SMS_NON_SHARING_STATEMENT,
-} from "@/lib/a2pBrand";
+import { CARRIER_LIABILITY_STATEMENT, SMS_NON_SHARING_STATEMENT } from "@/lib/a2pBrand";
 import BrandContactBlock from "@/components/BrandContactBlock";
 
 const PrivacyPolicy: React.FC = () => {
@@ -39,11 +36,7 @@ const PrivacyPolicy: React.FC = () => {
       <div className="max-w-4xl mx-auto bg-card border border-border rounded-2xl p-6 sm:p-10 space-y-8">
         <header className="space-y-2">
           <h1 className="text-3xl font-bold text-foreground">Privacy Policy for {brand.agency}</h1>
-          <p className="text-sm text-muted-foreground">Effective Date: {PRIVACY_EFFECTIVE_LABEL}</p>
-          <p className="text-sm text-muted-foreground">
-            This version replaces the {PRIOR_POLICY_EFFECTIVE_LABEL} policy. That earlier version
-            described one combined communication consent. The forms no longer use that wording.
-          </p>
+          <p className="text-sm text-muted-foreground">Effective Date: April 15, 2026</p>
         </header>
 
         <p className="text-sm text-muted-foreground leading-relaxed">
@@ -81,55 +74,52 @@ const PrivacyPolicy: React.FC = () => {
         <section className="space-y-3">
           <h2 className="text-xl font-semibold text-foreground">3. SMS Messaging &amp; A2P Compliance</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Quote and call forms offer two optional, unchecked SMS choices. Checking the
-            informational box is permission for recurring informational SMS/MMS from {brand.name} and{" "}
-            {brand.agency} about the quote you requested, appointments, and application or policy
-            updates. Checking the marketing box is separate permission for recurring marketing
-            SMS/MMS about life insurance products and coverage reviews. Leaving a box unchecked does
-            not grant that type of text. Providing a phone number, requesting a call, or reading
-            these policies does not grant either text permission.
+            By providing your phone number and opting in, you consent to receive{" "}
+            <strong>recurring automated marketing and informational text messages (SMS/MMS)</strong> from{" "}
+            {brand.agency}. These may include appointment reminders, policy updates, quote follow-ups,
+            and promotional offers.
           </p>
           <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
             <li>Message frequency varies</li>
             <li>Message and data rates may apply</li>
-            <li>Reply <strong>STOP</strong> to opt out of text messages you receive</li>
+            <li>To opt out at any time, reply <strong>STOP</strong></li>
             <li>
-              Reply <strong>HELP</strong> for help, or contact us at {brand.phone} or{" "}
+              For assistance, reply <strong>HELP</strong> or contact us at {brand.phone} or{" "}
               <a href={`mailto:${brand.email}`} className="underline underline-offset-2 hover:text-accent">
                 {brand.email}
               </a>
             </li>
-            <li>SMS consent is not required to request a quote, request a call, or purchase insurance</li>
             <li>{CARRIER_LIABILITY_STATEMENT}</li>
           </ul>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            When a request is saved, we store the contact details you submitted and the two SMS
-            choices separately, with the time of the save and the disclosure text shown on the form.
-            This website does not send text messages. A checked box records the choice. It does not
-            start a text, and it does not remove an opt-out once one is on file for that number and
-            sender.
+            We obtain <strong>explicit consent</strong> before sending SMS messages, and consent
+            records are maintained in accordance with applicable laws and carrier requirements.
           </p>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            If texts are sent later, a delivery provider such as Twilio may process the mobile number
-            only to transmit a message that the stored choice and any opt-out allow. That processing
-            is not a sale of your number and is not permission for another brand to text you.
+            We use a third-party messaging platform, <strong>Twilio</strong>, to deliver SMS
+            communications.
           </p>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            <strong>{SMS_NON_SHARING_STATEMENT}</strong>{" "}
-            Text messaging originator opt-in data and consent are excluded from every sharing
-            category below. We do not share that information with third parties or affiliates for
-            their marketing or promotional purposes.
+            <strong>{SMS_NON_SHARING_STATEMENT}</strong>
+            {" "}All the above categories exclude text messaging originator opt-in data and consent;
+            this information will not be shared with any third parties.
           </p>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-xl font-semibold text-foreground">4. Phone &amp; Email Communications</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Submitting a quote or call request asks {brand.name} to contact you about that request.
-            It is not a confirmed appointment, and it is not permission for recurring marketing
-            email, prerecorded calls, or autodialed calls. This form does not enroll you in
-            marketing email.
+            By providing your contact information, you consent to receive phone calls (including
+            autodialed and prerecorded calls) and emails regarding your inquiries, applications, and
+            services.
           </p>
+          <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+            <li>
+              You may opt out of email communications at any time by clicking the “unsubscribe”
+              link in any email
+            </li>
+            <li>You may also contact us directly to be removed from communications</li>
+          </ul>
         </section>
 
         <section className="space-y-3">
@@ -139,8 +129,8 @@ const PrivacyPolicy: React.FC = () => {
           </p>
           <p className="text-sm text-muted-foreground">We may share your information only in the following limited circumstances:</p>
           <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
-            <li>With licensed insurance carriers, when needed to obtain a quote or complete underwriting you asked for. This does not include selling or transferring SMS consent.</li>
-            <li>With a messaging provider, when one is connected, only to transmit a text the stored choice and any opt-out allow</li>
+            <li>With licensed insurance carriers to provide quotes and underwriting</li>
+            <li>With service providers (such as Twilio) solely to facilitate communications</li>
             <li>With government or regulatory authorities when required by law</li>
           </ul>
         </section>

@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useAgentProfile } from "@/hooks/useAgentProfile";
 import BookCallForm from "@/components/BookCallForm";
 import LegalNavLinks from "@/components/LegalNavLinks";
@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 
 export default function BookCall() {
   const { agencySlug, agentSlug } = useParams<{ agencySlug: string; agentSlug: string }>();
+  const location = useLocation();
   const { data: agent, isLoading, error } = useAgentProfile(agencySlug, agentSlug);
   usePageTitle(
     agent ? `Book a Call | ${agent.name} | ${agent.agency || "CG Financial"}` : "Book a Call"
@@ -42,7 +43,13 @@ export default function BookCall() {
         </div>
 
         <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 shadow-sm">
-          <BookCallForm agentName={agent.name} agencyName={agent.agency} />
+          <BookCallForm
+            agentName={agent.name}
+            agencyName={agent.agency}
+            agencySlug={agencySlug ?? ""}
+            agentSlug={agentSlug ?? ""}
+            pagePath={location.pathname}
+          />
         </div>
 
         <div className="flex flex-col items-center gap-3 text-xs text-muted-foreground">

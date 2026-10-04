@@ -27,7 +27,7 @@ export default function AgentSignup() {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
       options: {
@@ -42,6 +42,11 @@ export default function AgentSignup() {
     setLoading(false);
     if (error) {
       toast.error(error.message);
+      return;
+    }
+    if (!data.session) {
+      toast.success("Check your email to confirm your account, then sign in.");
+      navigate("/agent-admin/login");
       return;
     }
     toast.success("Account created. Welcome!");

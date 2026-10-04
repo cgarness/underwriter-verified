@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Save, Plus, Trash2, ArrowLeft, Check, Upload, Sparkles, Loader2, LogOut, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import IntakeRequestsPanel from "@/components/IntakeRequestsPanel";
 
 const US_STATES = [
   "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
@@ -169,32 +170,30 @@ export default function Admin() {
 
     setSavingProfile(true);
     try {
-      const { data: persistedAgent, error } = await supabase
-        .from("agents")
-        .upsert(
-          {
-            id: agentId ?? undefined,
-            user_id: user.id,
-            slug: nextAgentSlug,
-            agency_slug: nextAgencySlug,
-            name: updatedForm.name,
-            first_name: updatedForm.firstName,
-            last_name: updatedForm.lastName,
-            phone: updatedForm.phone,
-            email: updatedForm.email,
-            agency: updatedForm.agency,
-            npn: updatedForm.npn,
-            bio: updatedForm.bio,
-            short_bio: updatedForm.shortBio,
-            headshot_url: updatedForm.headshotUrl,
-            calendar_url: updatedForm.calendarUrl,
-            state_licenses: updatedForm.stateLicenses,
-            testimonials: updatedForm.testimonials,
-          },
-          { onConflict: "user_id" }
-        )
-        .select("id, slug, agency_slug")
-        .single();
+      const profile = {
+        user_id: user.id,
+        slug: nextAgentSlug,
+        agency_slug: nextAgencySlug,
+        name: updatedForm.name,
+        first_name: updatedForm.firstName,
+        last_name: updatedForm.lastName,
+        phone: updatedForm.phone,
+        email: updatedForm.email,
+        agency: updatedForm.agency,
+        npn: updatedForm.npn,
+        bio: updatedForm.bio,
+        short_bio: updatedForm.shortBio,
+        headshot_url: updatedForm.headshotUrl,
+        calendar_url: updatedForm.calendarUrl,
+        state_licenses: updatedForm.stateLicenses,
+        testimonials: updatedForm.testimonials,
+      };
+      // user_id has a partial unique index, which PostgREST cannot infer for
+      // an onConflict upsert. Update the loaded, owned row explicitly.
+      const query = agentId
+        ? supabase.from("agents").update(profile).eq("id", agentId).eq("user_id", user.id)
+        : supabase.from("agents").insert(profile);
+      const { data: persistedAgent, error } = await query.select("id, slug, agency_slug").single();
 
       if (error) throw error;
 
@@ -244,7 +243,7 @@ export default function Admin() {
       if (error) throw error;
       if (result?.testimonials) {
         setForm((prev) => ({ ...prev, testimonials: result.testimonials }));
-        toast.success("Testimonials generated!");
+        toast.success("Fictional samples generated. Replace them with authentic client feedback before publishing.");
       }
     } catch (err) {
       console.error(err);
@@ -307,6 +306,7 @@ export default function Admin() {
         </div>
       ) : (
         <div className="container max-w-2xl py-10 space-y-10">
+          <IntakeRequestsPanel />
           {/* Personal Info */}
           <Section title="Personal Information">
             <div className="grid grid-cols-2 gap-4">
@@ -426,7 +426,7 @@ export default function Admin() {
                 className="w-full border-accent text-accent hover:bg-accent/10"
               >
                 {generatingTestimonials ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-                {generatingTestimonials ? "Generating..." : "AI Auto-Generate Testimonials"}
+                {generatingTestimonials ? "Generating..." : "Generate sample testimonials"}
               </Button>
               {form.testimonials.map((t, i) => (
                 <div key={i} className="rounded-xl bg-card p-5 ring-1 ring-border/60 space-y-3">

@@ -80,12 +80,172 @@ export type Database = {
         }
         Relationships: []
       }
+      intake_requests: {
+        Row: {
+          agent_id: string
+          created_at: string
+          email: string
+          first_name: string
+          form_source: string
+          id: string
+          idempotency_key: string
+          last_name: string
+          page_path: string
+          payload_hash: string
+          phone_display: string
+          phone_e164: string
+          state: string | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          email: string
+          first_name: string
+          form_source: string
+          id?: string
+          idempotency_key: string
+          last_name: string
+          page_path: string
+          payload_hash: string
+          phone_display: string
+          phone_e164: string
+          state?: string | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          form_source?: string
+          id?: string
+          idempotency_key?: string
+          last_name?: string
+          page_path?: string
+          payload_hash?: string
+          phone_display?: string
+          phone_e164?: string
+          state?: string | null
+        }
+        Relationships: []
+      }
+      sms_consent_events: {
+        Row: {
+          agent_id: string
+          choice: string
+          created_at: string
+          disclosure_version_id: string
+          displayed_text: string
+          id: string
+          intake_request_id: string
+          phone_e164: string
+          privacy_effective_on: string
+          privacy_url: string
+          purpose: string
+          sender_agency: string
+          sender_name: string
+          suppressed_at_capture: boolean
+          terms_effective_on: string
+          terms_url: string
+        }
+        Insert: {
+          agent_id: string
+          choice: string
+          created_at?: string
+          disclosure_version_id: string
+          displayed_text: string
+          id?: string
+          intake_request_id: string
+          phone_e164: string
+          privacy_effective_on: string
+          privacy_url: string
+          purpose: string
+          sender_agency: string
+          sender_name: string
+          suppressed_at_capture?: boolean
+          terms_effective_on: string
+          terms_url: string
+        }
+        Update: {
+          agent_id?: string
+          choice?: string
+          created_at?: string
+          disclosure_version_id?: string
+          displayed_text?: string
+          id?: string
+          intake_request_id?: string
+          phone_e164?: string
+          privacy_effective_on?: string
+          privacy_url?: string
+          purpose?: string
+          sender_agency?: string
+          sender_name?: string
+          suppressed_at_capture?: boolean
+          terms_effective_on?: string
+          terms_url?: string
+        }
+        Relationships: []
+      }
+      sms_suppressions: {
+        Row: {
+          agent_id: string
+          created_at: string
+          id: string
+          phone_e164: string
+          reason: string
+          source: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          id?: string
+          phone_e164: string
+          reason: string
+          source: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          id?: string
+          phone_e164?: string
+          reason?: string
+          source?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      submit_public_intake: {
+        Args: {
+          p_idempotency_key: string
+          p_form_source: string
+          p_page_path: string
+          p_agency_slug: string
+          p_agent_slug: string
+          p_first_name: string
+          p_last_name: string
+          p_email: string
+          p_phone: string
+          p_state: string
+          p_informational_consent: boolean
+          p_marketing_consent: boolean
+          p_disclosure_version_id: string
+          p_fax_number: string
+        }
+        Returns: Json
+      }
+      my_sms_eligibility: {
+        Args: {
+          p_phone: string
+          p_message_class: string
+        }
+        Returns: {
+          allowed: boolean
+          reason: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

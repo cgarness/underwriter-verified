@@ -10,7 +10,15 @@ export const DEFAULT_BRAND = {
 /** Public production origin for A2P brand / campaign website fields. */
 export const A2P_SITE_ORIGIN = "https://www.underwriterverified.com";
 
-export const A2P_AGENT_PATH = "/cg-financial/christopher-garness";
+export const CANONICAL_AGENCY_SLUG = "cg-financial";
+export const CANONICAL_AGENT_SLUG = "christopher-garness";
+export const A2P_AGENT_PATH = `/${CANONICAL_AGENCY_SLUG}/${CANONICAL_AGENT_SLUG}`;
+
+export const PRIVACY_EFFECTIVE_ON = "2026-09-29";
+export const TERMS_EFFECTIVE_ON = "2026-09-29";
+export const PRIVACY_EFFECTIVE_LABEL = "September 29, 2026";
+export const PRIOR_POLICY_EFFECTIVE_ON = "2026-04-15";
+export const PRIOR_POLICY_EFFECTIVE_LABEL = "April 15, 2026";
 
 export const A2P_WEBSITE_URL = `${A2P_SITE_ORIGIN}${A2P_AGENT_PATH}`;
 export const A2P_OPT_IN_URL = `${A2P_SITE_ORIGIN}/sms-opt-in`;

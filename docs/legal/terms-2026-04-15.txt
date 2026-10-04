@@ -1,15 +1,12 @@
+Archive of the public page source that was effective April 15, 2026. Kept so later consent records can be compared with the wording that was live before the September 29, 2026 separate-consent update. Not a route.
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useLegalBrand } from "@/hooks/useLegalBrand";
 import { useLegalPaths } from "@/hooks/useLegalPaths";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import {
-  CARRIER_LIABILITY_STATEMENT,
-  PRIOR_POLICY_EFFECTIVE_LABEL,
-  PRIVACY_EFFECTIVE_LABEL,
-  SMS_NON_SHARING_STATEMENT,
-} from "@/lib/a2pBrand";
+import { CARRIER_LIABILITY_STATEMENT, SMS_NON_SHARING_STATEMENT } from "@/lib/a2pBrand";
 import BrandContactBlock from "@/components/BrandContactBlock";
 
 const TermsAndConditions: React.FC = () => {
@@ -39,11 +36,7 @@ const TermsAndConditions: React.FC = () => {
       <div className="max-w-4xl mx-auto bg-card border border-border rounded-2xl p-6 sm:p-10 space-y-8">
         <header className="space-y-2">
           <h1 className="text-3xl font-bold text-foreground">Terms and Conditions for {brand.agency}</h1>
-          <p className="text-sm text-muted-foreground">Effective Date: {PRIVACY_EFFECTIVE_LABEL}</p>
-          <p className="text-sm text-muted-foreground">
-            This version replaces the {PRIOR_POLICY_EFFECTIVE_LABEL} terms. The forms now use two
-            separate SMS choices instead of one combined communication consent.
-          </p>
+          <p className="text-sm text-muted-foreground">Effective Date: April 15, 2026</p>
         </header>
 
         <p className="text-sm text-muted-foreground leading-relaxed">
@@ -76,24 +69,19 @@ const TermsAndConditions: React.FC = () => {
           <h2 className="text-xl font-semibold text-foreground">3. SMS Communications</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             The <strong>{brand.agency} Messaging Program</strong> is operated by {brand.name} and{" "}
-            {brand.agency}. Informational texts and marketing texts are separate optional choices on
-            the quote form and the call-request form. Informational texts cover the quote you
-            requested, appointments, and application or policy updates. Marketing texts cover life
-            insurance products and coverage reviews. Neither box is required to submit the form.
+            {brand.agency}. By providing your phone number and optionally consenting to SMS
+            communications, you agree to receive recurring text messages including appointment
+            reminders, insurance updates, policy information, quote follow-ups, and promotional
+            offers from {brand.name} and {brand.agency}.
           </p>
           <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
-            <li>Message frequency varies</li>
+            <li>Message frequency may vary</li>
             <li>Message and data rates may apply</li>
-            <li>Reply <strong>STOP</strong> to opt out</li>
-            <li>Reply <strong>HELP</strong> for help</li>
-            <li>SMS consent is not required to request a quote, request a call, or purchase insurance</li>
+            <li>Reply <strong>STOP</strong> at any time to opt out</li>
+            <li>Reply <strong>HELP</strong> for assistance</li>
+            <li>Consent is not a condition of purchase</li>
             <li>{CARRIER_LIABILITY_STATEMENT}</li>
           </ul>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            A saved request stores each SMS choice on its own. This website does not send text
-            messages. Checking a box does not confirm an appointment and does not erase a STOP or
-            other opt-out once that opt-out is recorded for the number and sender.
-          </p>
           <p className="text-sm text-muted-foreground leading-relaxed">
             For customer support, contact us at {brand.phone} or{" "}
             <a href={`mailto:${brand.email}`} className="underline underline-offset-2 hover:text-accent">
@@ -109,9 +97,11 @@ const TermsAndConditions: React.FC = () => {
         <section className="space-y-3">
           <h2 className="text-xl font-semibold text-foreground">4. Phone &amp; Email Communications</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            A call request asks us to contact you about scheduling a call. It is not a confirmed
-            appointment, and it does not authorize recurring marketing texts, informational texts,
-            marketing email, or prerecorded or autodialed calls.
+            By providing your contact information, you consent to receive phone calls (including
+            autodialed and prerecorded calls) and emails regarding your inquiries, applications, and
+            services. You may opt out of email communications at any time by clicking the
+            "unsubscribe" link in any email or by contacting us directly to be removed from
+            communications.
           </p>
         </section>
 
