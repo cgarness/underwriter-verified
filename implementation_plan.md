@@ -1,13 +1,13 @@
 # CG Financial A2P website refinements — implementation plan
 
-Status: **planning only; not approved for implementation or production changes**
+Status: **implementation approved and completed on the isolated branch; production release approval still required**
 
-Prepared: 2026-10-05  
-Repository: `cgarness/underwriter-verified`  
-Base / verified production commit: `0e64478c0e15ba3630a76228b8ffb3a4f3f3e015`  
-Working branch: `codex/cg-financial-a2p-refinements-20261005`  
-Production site: `https://www.underwriterverified.com`  
-Active website Supabase: `jzdzeevjpootbeuniygx`  
+Prepared: 2026-10-05
+Repository: `cgarness/underwriter-verified`
+Base / verified production commit: `0e64478c0e15ba3630a76228b8ffb3a4f3f3e015`
+Working branch: `codex/cg-financial-a2p-refinements-20261005`
+Production site: `https://www.underwriterverified.com`
+Active website Supabase: `jzdzeevjpootbeuniygx`
 Excluded: retired Lovable backend `rtgmdbqzkwlmplurypyh`; AgentFlow database `jncvvsvckxhqgqvkppmj`
 
 ## Verified starting state
