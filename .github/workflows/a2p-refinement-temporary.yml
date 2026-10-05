@@ -120,7 +120,7 @@ jobs:
               await page.goto(base + "/cg-financial/christopher-garness/privacy-policy", { waitUntil: "networkidle" });
               const privacyBody = await page.locator("body").innerText();
               if (!privacyBody.includes(nonSharing)) throw new Error(`${viewport.name}: privacy policy missing explicit non-sharing statement`);
-              if (!privacyBody.replace(/\\D/g, "").includes("9097756963")) {
+              if (!privacyBody.replace(/\D/g, "").includes("9097756963")) {
                 throw new Error(`${viewport.name}: privacy policy missing support phone 909-775-6963`);
               }
               for (const required of ["chris@fflagent.com", "October 5, 2026"]) {
