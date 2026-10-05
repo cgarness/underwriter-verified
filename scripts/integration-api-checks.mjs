@@ -42,7 +42,7 @@ function intakeArgs(overrides) {
     p_state: "California",
     p_informational_consent: false,
     p_marketing_consent: false,
-    p_disclosure_version_id: "2026-09-29-separate-sms",
+    p_disclosure_version_id: "2026-10-05-policy-clarifications",
     p_fax_number: "",
     ...overrides,
   };
@@ -101,7 +101,7 @@ let neitherId = null;
   check(
     "two consent events, both not_granted, with disclosure text",
     events?.length === 2 &&
-      events.every((e) => e.choice === "not_granted" && e.disclosure_version_id === "2026-09-29-separate-sms" && e.agent_id === AGENT_A) &&
+      events.every((e) => e.choice === "not_granted" && e.disclosure_version_id === "2026-10-05-policy-clarifications" && e.agent_id === AGENT_A) &&
       events.map((e) => e.purpose).join(",") === "informational,marketing" &&
       events[0].displayed_text.startsWith("I agree to receive recurring informational SMS/MMS from Christopher Garness and CG Financial") &&
       events[0].displayed_text.includes("Privacy Policy: https://www.underwriterverified.com/cg-financial/christopher-garness/privacy-policy"),

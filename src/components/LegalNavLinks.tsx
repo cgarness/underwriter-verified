@@ -3,10 +3,14 @@ import { useLegalPaths } from "@/hooks/useLegalPaths";
 
 interface LegalNavLinksProps {
   className?: string;
+  privacyHref?: string;
+  termsHref?: string;
 }
 
-export default function LegalNavLinks({ className }: LegalNavLinksProps) {
-  const { privacy, terms } = useLegalPaths();
+export default function LegalNavLinks({ className, privacyHref, termsHref }: LegalNavLinksProps) {
+  const legal = useLegalPaths();
+  const privacy = privacyHref ?? legal.privacy;
+  const terms = termsHref ?? legal.terms;
 
   return (
     <nav className={className ?? "flex items-center justify-center gap-4 text-xs text-muted-foreground"}>
