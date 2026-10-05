@@ -203,10 +203,8 @@ Historical fixture files that intentionally represent old evidence (for example 
 
 ## Approval gates
 
-**Gate 1 — now:** Chris approves or changes this surgical implementation plan.
+**Gate 1 — completed:** Chris approved this surgical implementation plan. Implementation and testing were performed only on the isolated branch; production was not mutated.
 
-Only after Gate 1 will code/test changes be made on this branch. No backend mutation will occur.
-
-**Gate 2 — after implementation/testing:** present the exact PR head, diff/file list, diagnostics, tests, rendered-route results, exact generated migration SQL, and release sequence. Chris must explicitly approve merge/deploy and the exact production database action.
+**Gate 2 — next:** present the exact PR head, diff/file list, diagnostics, tests, rendered-route results, exact generated migration SQL, and release sequence. Chris must explicitly approve merge/deploy and the exact production database action.
 
 **Gate 3 — after approved deployment:** re-read the exact production commit/deployment and five live pages, then report remaining registration/sending limitations and prepare the AgentFlow handoff. Twilio/TCR submission remains outside this release.
