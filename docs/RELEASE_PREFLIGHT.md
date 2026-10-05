@@ -80,6 +80,28 @@ Before Gate 2:
 
 No verification step may submit a production form or send a message.
 
+## Verification result
+
+Final application/legal verification ran against commit `08da6618431c18b91e4a9e126427767e0b6d006b` and passed:
+
+- verified install: `bun@1.3.10 install --frozen-lockfile`;
+- `npx tsc --noEmit`: passed;
+- `npx tsc -p tsconfig.app.json --noEmit`: passed;
+- targeted A2P/intake/eligibility suite: **42/42 passed**;
+- full Vitest suite: **57/57 passed**;
+- changed-file ESLint: passed;
+- `git diff --check origin/main...HEAD`: passed;
+- local PostgreSQL release-order harness: **`INTAKE_SQL_OK`**;
+- `VERCEL_ENV=production npm run build`: passed;
+- desktop route verification (1440×900): all five routes passed;
+- mobile route verification (390×844): all five routes passed.
+
+The rendered checks verified the CG Financial / Christopher Garness identity, scoped policy links, two optional unchecked consent choices, STOP/HELP, frequency/rates, carrier disclaimer, support contacts, October 5 policy date, explicit mobile-information non-sharing language, Terms section 4 clarification, and absence of horizontal overflow. No form was submitted.
+
+The exact-base run and final run showed the same pre-existing non-blocking notices: React Router v7 future flags, stale Browserslist data, and the existing bundle-size warning. No new TypeScript/test/lint/SQL/rendering diagnostic was introduced.
+
+The temporary branch-only verification workflow used to obtain these results was removed before PR preparation.
+
 ## Rollback
 
 Do not undo or delete disclosure history. Once the October 5 migration is applied, rolling the frontend back to the September 29 build would intentionally fail closed because that build submits the old disclosure ID. If the new frontend has a release problem after the migration, prefer a forward hotfix that keeps `2026-10-05-policy-clarifications`; do not reactivate the old disclosure row casually.
