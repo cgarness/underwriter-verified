@@ -6,6 +6,7 @@ import { AgentDataProvider } from "@/contexts/AgentDataContext";
 import SmsOptInForm from "@/components/SmsOptInForm";
 import { CANONICAL_AGENCY_SLUG, CANONICAL_AGENT_SLUG } from "@/lib/a2pBrand";
 import Footer from "@/components/Footer";
+import LegalNavLinks from "@/components/LegalNavLinks";
 import LegalSection from "@/components/LegalSection";
 import ContactSection from "@/components/ContactSection";
 import Landing from "@/pages/Landing";
@@ -131,6 +132,7 @@ describe("A2P campaign surfaces", () => {
 
     expect(screen.getByRole("heading", { name: /privacy policy for cg financial/i })).toBeInTheDocument();
     expect(screen.getByText(SMS_NON_SHARING_STATEMENT)).toBeInTheDocument();
+    expect(document.body.textContent).toMatch(/two separate, optional SMS choices remain unchanged/i);
     expect(screen.getByText(/message frequency varies/i)).toBeInTheDocument();
     expect(document.body.textContent).toMatch(/Carriers are not liable for any delayed or undelivered messages/i);
   });
@@ -161,7 +163,7 @@ describe("A2P campaign surfaces", () => {
       screen.getByText("/cg-financial/christopher-garness/terms-and-conditions")
     ).toBeInTheDocument();
   });
-  it("keeps required SMS terms on the terms page", async () => {
+  it("keeps required SMS terms on the terms page and separates call requests from SMS consent", async () => {
     const { default: TermsAndConditions } = await import("@/pages/TermsAndConditions");
     renderWithProviders(<TermsAndConditions />);
 
@@ -171,6 +173,27 @@ describe("A2P campaign surfaces", () => {
     expect(screen.getByText(/CG Financial Messaging Program/i)).toBeInTheDocument();
     expect(document.body.textContent).toMatch(/Carriers are not liable for any delayed or undelivered messages/i);
     expect(screen.getByText(SMS_NON_SHARING_STATEMENT)).toBeInTheDocument();
+    expect(document.body.textContent).toMatch(/A call request by itself asks us to contact you about scheduling a call/i);
+    expect(document.body.textContent).toMatch(/If you separately select one of the optional SMS checkboxes described in Section 3/i);
+  });
+
+  it("lets the dedicated opt-in footer use scoped legal links without changing shared fallback behavior", () => {
+    renderWithProviders(
+      <LegalNavLinks
+        privacyHref="/cg-financial/christopher-garness/privacy-policy"
+        termsHref="/cg-financial/christopher-garness/terms-and-conditions"
+      />,
+      "/sms-opt-in",
+    );
+
+    expect(screen.getByRole("link", { name: /privacy policy/i })).toHaveAttribute(
+      "href",
+      "/cg-financial/christopher-garness/privacy-policy",
+    );
+    expect(screen.getByRole("link", { name: /terms and conditions/i })).toHaveAttribute(
+      "href",
+      "/cg-financial/christopher-garness/terms-and-conditions",
+    );
   });
 
   it("publishes the custom domain URLs for A2P registration", () => {

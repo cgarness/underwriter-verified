@@ -75,17 +75,22 @@ describe("SMS eligibility", () => {
   });
 });
 
-describe("disclosure text stored by the migration", () => {
-  const sql = readFileSync(
+describe("disclosure text stored by the migrations", () => {
+  const intakeSql = readFileSync(
     path.resolve(process.cwd(), "supabase/migrations/20260929183000_public_intake_and_sms_consent.sql"),
     "utf8",
   );
+  const policySql = readFileSync(
+    path.resolve(process.cwd(), "supabase/migrations/20261005182200_advance_a2p_policy_disclosure.sql"),
+    "utf8",
+  );
 
-  it("keeps the version id and templates in the database migration", () => {
-    expect(sql).toContain(SMS_DISCLOSURE_VERSION_ID);
-    expect(sql).toContain(SMS_INFORMATIONAL_TEMPLATE);
-    expect(sql).toContain(SMS_MARKETING_TEMPLATE);
-    expect(sql).toContain(SMS_DISCLOSURE_BODY);
+  it("preserves the historical disclosure and advances the current evidence version", () => {
+    expect(intakeSql).toContain("2026-09-29-separate-sms");
+    expect(policySql).toContain(SMS_DISCLOSURE_VERSION_ID);
+    expect(policySql).toContain(SMS_INFORMATIONAL_TEMPLATE);
+    expect(policySql).toContain(SMS_MARKETING_TEMPLATE);
+    expect(policySql).toContain(SMS_DISCLOSURE_BODY);
   });
 
   it("builds the evidence text reviewers can compare with a saved row", () => {

@@ -1,6 +1,6 @@
 # Underwriter Verified: Lovable Cloud transfer
 
-Updated October 4, 2026 UTC. The separate destination project is healthy, the original profile is restored and assigned to Chris's confirmed login, and the secured Edge Function is deployed. Frontend changes remain in draft PR #11; production cutover still needs approval. Do not operate on any AgentFlow resource.
+Updated October 5, 2026 UTC. The transfer is complete in production: `www.underwriterverified.com` serves repository commit `0e64478c0e15ba3630a76228b8ffb3a4f3f3e015` against active Supabase project `jzdzeevjpootbeuniygx`. The original profile is assigned to Chris's confirmed login and the secured Edge Function is deployed. The former Lovable backend `rtgmdbqzkwlmplurypyh` is retired and not active production. This document preserves transfer history; do not operate on any AgentFlow resource.
 
 ## Confirmed targets
 
@@ -58,8 +58,7 @@ Local verification on October 3 passed in isolated PGlite: exact equality of eve
 - Email/Password enabled, email confirmation enabled, anonymous sign-ins disabled. Site URL: `https://www.underwriterverified.com`; exact redirects: `https://www.underwriterverified.com/agent-admin` and `https://underwriterverified.com/agent-admin`.
 - `generate-testimonials` deployed ACTIVE, version 1, JWT verification enabled. The handler additionally verifies a real Auth user and owned profile, validates input/output, and limits generation to five attempts per user per UTC day. Provider failures do not expose raw errors or credentials. Generated output always includes fictional-sample labels.
 - `AI_API_KEY` has not been supplied. Generation stays unavailable until it is configured as an Edge Function secret; no OpenAI calls or charges were made. Platform-provided Supabase credentials remain server-side.
-- The draft frontend now references the new project and public publishable key, uses the new production database allowlist, handles confirmation-required signup, and labels the generation button as samples. Preview intake remains disabled. Vercel environment overrides must still be checked before production cutover.
-- Public REST profile GET returns 200; unauthenticated function calls return 401. Inspection of preview commit `79685d6` caught Vercel environment overrides still pointing the API client at Lovable. The disabled-intake notice and sample labels are present. Three config overrides for `VITE_SUPABASE_PROJECT_ID`, `VITE_SUPABASE_PUBLISHABLE_KEY`, and `VITE_SUPABASE_URL` are now saved only for preview branch `cursor/a2p-consent-intake-c93e`. Existing all-environment values remain unchanged, so production remains on Lovable. The rebuilt preview at application commit `246a3b93fb51fdcc1083798a282a685edf8e79f8`, deployment `dpl_c8tBy9dM2amEB3Ms5YhjBMSTfpfX`, was verified: its bundle uses the new host with no old host, and the browser renders the original profile/photo (400 × 341 image), two unchecked SMS choices, a disabled submit button, and the preview notice. No form was submitted. Preview: https://underwriterverified-k4fnljgt3-cgarness-projects.vercel.app/cg-financial/christopher-garness .
+- Historical pre-cutover note: the draft frontend was moved to `jzdzeevjpootbeuniygx`, preview intake was disabled, and preview-only Vercel overrides were used to prove the destination before release. Inspection caught and corrected older preview configuration that still referenced Lovable. Production cutover later completed at `0e64478c0e15ba3630a76228b8ffb3a4f3f3e015`; current production no longer uses the Lovable backend.
 - Profile saving now explicitly updates the loaded owner-scoped row (or inserts when absent), because the preserved partial `user_id` unique index cannot support the previous PostgREST `onConflict` upsert.
 - All 55 tests, TypeScript, changed-file ESLint, and the preview build passed. Function tests use mocked services. Real owner sign-in and empty inbox refresh are now verified in the preview; profile saving and an authenticated paid generation remain unverified.
 
@@ -73,14 +72,14 @@ Independent post-commit readback confirmed two profiles preserved, exactly the o
 
 The historical source/destination full-row equality and zero-auth counts above describe the state **before** this approved setup. Future delta checks must explicitly account for the new destination auth account, preserved starter, and intentional canonical ownership/timestamp differences, while still comparing all canonical profile content and reviewing any new source records.
 
-## Remaining setup and cutover
+## Post-cutover state and remaining optional work
 
-1. Repeat the Lovable/destination delta check immediately before eventual cutover, accounting for the documented destination-only account and ownership changes; reconcile any subsequent source changes.
-2. Account setup and the specifically approved ownership assignment are complete. Chris's real sign-in, original profile loading, and empty inbox refresh are verified in the preview; never mint a user session or delete the preserved starter automatically.
-3. Add an owned OpenAI API key directly as the new project's `AI_API_KEY` Edge Function secret if sample generation is wanted. Do not put it in chat, Git, or a `VITE_*` variable. Verify an authenticated request after account setup; manual testimonials do not require this feature.
-4. The draft destination, public profile, nested login/admin routes, real sign-in, and empty inbox refresh are verified. Verify actual owner saving and controlled consent persistence only in the approved workflow. Preserve production/preview separation and resolve old preview access.
-5. Obtain separate approval for the exact PR head, Vercel production configuration, and cutover. The ownership approval does not authorize a production release. Rebuild production with its correct target. Keep the Lovable backend intact for rollback and reconcile any post-cutover data before rolling back.
+1. Production cutover is complete on `jzdzeevjpootbeuniygx`; do not repeat the old source-to-destination cutover procedure or replay the squashed bootstrap migrations.
+2. Chris's confirmed account owns the canonical CG Financial profile. Preserve the documented unlinked starter row and existing owner/RLS model; no ownership change is part of the October 5 A2P refinement.
+3. The optional `AI_API_KEY` remains unrelated to A2P readiness. Add it only through the Edge Function secret path if sample testimonial generation is wanted.
+4. The October 5 A2P refinement is a separate forward release: it changes legal copy/link routing and adds one disclosure-version migration. That migration must receive exact production approval before application.
+5. Keep the retired Lovable backend only as historical transfer/rollback context. AgentFlow remains a separate database and application.
 
-No production environment, DNS, source data, AgentFlow resource, Twilio registration, messaging, or phone numbers were changed during this preparation.
+Historical preparation note: the October 3 transfer preparation did not change production DNS, AgentFlow, Twilio registration, messaging, or phone numbers. A later separately approved release completed the website production cutover to `jzdzeevjpootbeuniygx`. The October 5 A2P refinement has not yet changed production data or messaging configuration.
 
 Official migration references: [Lovable external deployment](https://docs.lovable.dev/tips-tricks/external-deployment-hosting) and [Lovable data export](https://docs.lovable.dev/features/advanced-settings). A full database export can also preserve auth password hashes if accounts are added before cutover; storage files are separate. Use the current inventory rather than assuming it stays empty.

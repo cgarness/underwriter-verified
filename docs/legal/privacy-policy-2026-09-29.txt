@@ -1,3 +1,5 @@
+Archive of the public page source that was effective September 29, 2026 through October 5, 2026. Kept so consent records can be compared with the wording that was live before the October 5, 2026 policy clarification update. Not a route.
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -41,9 +43,8 @@ const PrivacyPolicy: React.FC = () => {
           <h1 className="text-3xl font-bold text-foreground">Privacy Policy for {brand.agency}</h1>
           <p className="text-sm text-muted-foreground">Effective Date: {PRIVACY_EFFECTIVE_LABEL}</p>
           <p className="text-sm text-muted-foreground">
-            This version replaces the {PRIOR_POLICY_EFFECTIVE_LABEL} policy. The two separate,
-            optional SMS choices remain unchanged; this update clarifies mobile-information
-            non-sharing and the limited processing needed for requested services and permitted texts.
+            This version replaces the {PRIOR_POLICY_EFFECTIVE_LABEL} policy. That earlier version
+            described one combined communication consent. The forms no longer use that wording.
           </p>
         </header>
 
@@ -144,11 +145,6 @@ const PrivacyPolicy: React.FC = () => {
             <li>With a messaging provider, when one is connected, only to transmit a text the stored choice and any opt-out allow</li>
             <li>With government or regulatory authorities when required by law</li>
           </ul>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            These limited processing disclosures do not transfer SMS consent or authorize any
-            carrier, messaging provider, third party, or affiliate to use your mobile information or
-            SMS consent for its own marketing or promotional messages.
-          </p>
         </section>
 
         <section className="space-y-3">

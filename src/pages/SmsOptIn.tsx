@@ -63,7 +63,10 @@ const SmsOptIn: React.FC = () => {
           />
         </div>
 
-        <LegalNavLinks />
+        <LegalNavLinks
+          privacyHref={`${A2P_AGENT_PATH}/privacy-policy`}
+          termsHref={`${A2P_AGENT_PATH}/terms-and-conditions`}
+        />
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ Review only. Nothing in this change was submitted to Twilio. This is not an appr
 
 Production site: https://www.underwriterverified.com
 
-The website in `cgarness/underwriter-verified` currently uses Lovable Cloud backend `rtgmdbqzkwlmplurypyh`. A new, separate **Underwriter Verified** Supabase organization (`bmuykmwtwicpltmpenqm`, Free) has been created for its migration. Destination project `jzdzeevjpootbeuniygx` is restored and configured; production cutover remains pending. See `docs/SUPABASE_TRANSFER.md`. AgentFlow is excluded from all transfer operations. This repository does not send SMS.
+Production currently serves `cgarness/underwriter-verified` commit `0e64478c0e15ba3630a76228b8ffb3a4f3f3e015` and uses the active **Underwriter Verified** Supabase project `jzdzeevjpootbeuniygx` in organization `bmuykmwtwicpltmpenqm`. The former Lovable backend `rtgmdbqzkwlmplurypyh` is retired and is not the active production backend. AgentFlow database `jncvvsvckxhqgqvkppmj` is separate and excluded from this website release. This repository records consent evidence but does not send SMS. The October 5 policy/link refinement is a release candidate only until Chris separately approves the exact production migration, merge, and deployment.
 
 ## Campaign description
 
@@ -18,20 +18,20 @@ Only website forms are implemented. There is no keyword, paper, verbal, QR, or F
 
 Each implemented route shows two unchecked boxes, the frequency and rate disclosures, STOP and HELP, the statement that SMS consent is not required to request a quote, request a call, or purchase insurance, the carrier delivery disclaimer, and links to that agent’s privacy policy and terms.
 
-1. Dedicated quote page for this brand only: https://www.underwriterverified.com/sms-opt-in  
+1. Dedicated quote page for this brand only: https://www.underwriterverified.com/sms-opt-in
    The server accepts this path only for agency slug `cg-financial` and agent slug `christopher-garness`. Another agency’s identity is rejected. The visitor completes the quote form and may check one box, both, or neither.
 
-2. Quote section on the agent profile: https://www.underwriterverified.com/cg-financial/christopher-garness  
+2. Quote section on the agent profile: https://www.underwriterverified.com/cg-financial/christopher-garness
    Same two boxes. The names on the boxes come from the agent row for that profile, resolved again on the server from the page path.
 
-3. Call request: https://www.underwriterverified.com/cg-financial/christopher-garness/bookcall and the `/book` alias.  
+3. Call request: https://www.underwriterverified.com/cg-financial/christopher-garness/bookcall and the `/book` alias.
    Same two boxes. Submitting a call request does not grant SMS permission unless a box is checked, and the confirmation says the call is not yet scheduled.
 
 Not opt-in methods: the “Get in touch” section on the profile (it now only links to the quote form and the call request form and does not collect anything), the calendar link, and a `sms:` link that only opens the visitor’s own texting app. Following a link never records SMS consent; only the two checkboxes on the quote and call forms do.
 
-Privacy policy: https://www.underwriterverified.com/cg-financial/christopher-garness/privacy-policy  
-Terms: https://www.underwriterverified.com/cg-financial/christopher-garness/terms-and-conditions  
-Effective date of the current policy text: September 29, 2026. The April 15, 2026 wording is archived in `docs/legal/`.
+Privacy policy: https://www.underwriterverified.com/cg-financial/christopher-garness/privacy-policy
+Terms: https://www.underwriterverified.com/cg-financial/christopher-garness/terms-and-conditions
+Current production policy text is effective September 29, 2026. This release candidate advances the Privacy Policy and Terms to October 5, 2026 and archives the exact September 29 page sources in `docs/legal/`; the April 15, 2026 archives remain unchanged.
 
 ## Exact consent language
 
@@ -55,16 +55,16 @@ A saved submission writes two consent events, one per purpose, with `granted` or
 
 Embedded link: yes. Embedded phone number: yes. The samples below are the intended content if a sender is connected later. This website does not send them.
 
-1. Requested-quote response (informational):  
+1. Requested-quote response (informational):
    CG Financial: [FirstName], we received your life insurance quote request. Christopher Garness will follow up about that request. Call 909-775-6963 or visit https://www.underwriterverified.com/cg-financial/christopher-garness/bookcall. Reply STOP to opt out. Msg & data rates may apply.
 
-2. Appointment reminder (informational):  
+2. Appointment reminder (informational):
    CG Financial: Reminder, your appointment with Christopher Garness is [Date] at [Time]. Details: https://www.underwriterverified.com/cg-financial/christopher-garness. Reply STOP to opt out. Reply HELP for help.
 
-3. Application or policy update (informational):  
+3. Application or policy update (informational):
    CG Financial: [FirstName], there is an update on your life insurance application. Call 909-775-6963 with questions. Reply STOP to opt out. Msg & data rates may apply.
 
-4. Marketing:  
+4. Marketing:
    CG Financial: [FirstName], Christopher Garness can review life insurance coverage options with you. Visit https://www.underwriterverified.com/cg-financial/christopher-garness or call 909-775-6963. Reply STOP to opt out. Reply HELP for help.
 
 The appointment sample is the wording for a reminder after a time has actually been scheduled. The website does not book that time by itself, and the call form does not say an appointment is confirmed.
@@ -111,13 +111,13 @@ What this migration does not do: it does not touch the existing production agent
 
 Hosted recheck on October 3, 2026 through the newly connected Lovable account confirms the canonical profile still has **`user_id = NULL`**, with **zero auth users**, one application table (`agents`), and no storage objects. Current source RLS has only public read and owner write policies; the historical anonymous policies described above are absent from the actual source. Broad source table grants remain; destination hardening has now been applied and verified. Source catalog and the full original profile were captured read-only. The consent schema is hosted in the new destination, with zero intake/consent records; the source remains unchanged. Follow `docs/SUPABASE_TRANSFER.md` for the new destination; preserve profile data and avoid automatic deletion when assigning ownership.
 
-Destination ownership update, 2026-10-04 00:14:04 UTC: Chris confirmed `chris@fflagent.com` and created the confirmed account. Following specific approval, a guarded transaction unlinked the blank signup starter without deleting it and attached the original Christopher Garness / CG Financial profile to that account. Independent readback verified both profiles and all content preserved, RLS enabled, anonymous UPDATE denied, and zero intake/consent/suppression/AI-usage rows. Only ownership and automatic update timestamps changed; the Lovable source remains untouched. Real owner sign-in, original profile loading, and empty inbox refresh subsequently passed in the preview; no profile fields were edited or saved. Production cutover remains pending. See SUPABASE_TRANSFER.md for exact IDs and hashes.
+Destination ownership update, 2026-10-04 00:14:04 UTC: Chris confirmed `chris@fflagent.com` and created the confirmed account. Following specific approval, a guarded transaction unlinked the blank signup starter without deleting it and attached the original Christopher Garness / CG Financial profile to that account. Independent readback verified both profiles and all content preserved, RLS enabled, anonymous UPDATE denied, and zero intake/consent/suppression/AI-usage rows. Only ownership and automatic update timestamps changed; the Lovable source remained untouched. Real owner sign-in, original profile loading, and empty inbox refresh passed before cutover. Production cutover subsequently completed at `0e64478c0e15ba3630a76228b8ffb3a4f3f3e015`; the active production backend is now `jzdzeevjpootbeuniygx`. See SUPABASE_TRANSFER.md for exact IDs and hashes.
 
 ## Three different kinds of “ready”
 
-1. Website intake and consent storage — implementation is on this branch, not production. Earlier PostgreSQL/PostgREST/browser results are reported in the handoff. Follow-up verification passed 55 frontend/function tests, TypeScript, a preview build, and the ownership/consent/AI-quota assertions in isolated PGlite. The separate destination is restored, its original profile content is preserved, and hosted permissions and unauthenticated function rejection are verified. After the Lovable query limit reset, pre-account source/destination profile hashes and counts matched. Confirmed account setup and the approved ownership assignment are now complete. The draft preview loads the restored profile/photo from the new target; repeat the delta check at eventual cutover while accounting for intentional destination-only account and ownership changes. Real preview owner sign-in/profile loading and empty inbox refresh also passed. Optional AI secret, preview retirement, release approval, production deployment, actual owner saving, and controlled intake verification remain pending.
-2. Twilio registration readiness — the draft text in this document is ready for Chris to review. Legal name, EIN, structure, volume, account, and non-website opt-in sources are still missing. Nothing has been submitted to Twilio.
-3. Operational readiness to send — not ready. No sender exists in this repository. AgentFlow is a separate system with its own database; no code in this repository connects to it, and no existing mechanism to share consent with it was found here. Do not describe AgentFlow as using this site’s `evaluate_sms_eligibility` until that integration is built and verified.
+1. **Website readiness** — the Supabase cutover is complete in production at `0e64478c0e15ba3630a76228b8ffb3a4f3f3e015`, using `jzdzeevjpootbeuniygx`. The live forms already preserve two independent optional unchecked SMS choices, append-only evidence, and STOP suppression. The October 5 refinement release candidate strengthens the mobile-information non-sharing statement, fixes the dedicated `/sms-opt-in` footer links, clarifies Terms section 4, and advances the legal/disclosure version forward-only. It is not live until the exact migration and release are separately approved.
+2. **Twilio/TCR registration readiness** — the website/message-flow evidence is prepared for review, but final registration still depends on exact legal business identity/EIN data, the actual Twilio account/Brand route, expected volume, and confirmation of every real opt-in source. Nothing in this repository work submits a Brand or Campaign or guarantees approval.
+3. **SMS sending readiness** — separate and not complete here. This website has no outbound sender or message queue. AgentFlow is a separate system and must enforce purpose-specific consent plus suppression at send time before it sends on behalf of this profile.
 
 ## Still needed from Chris
 
@@ -127,11 +127,10 @@ Destination ownership update, 2026-10-04 00:14:04 UTC: Chris confirmed `chris@ff
 - Approximate daily SMS volume.
 - Which Twilio account or subaccount, existing Brand, Messaging Service, and sending numbers to use.
 - Whether any opt-in source besides the three website routes exists, including Facebook.
-- Confirmation that the production agent row is owned by the login Chris uses at `/agent-admin`, after the migration is applied.
 
 ## Registration route
 
-Not selected. Apply the migration to the site database, confirm the EIN, then decide Standard vs another Brand type from Twilio’s current rules. Do not submit a Brand, Campaign, Trust Hub profile, or phone number as part of this work.
+Not selected. The website database cutover is already complete. Confirm the exact EIN/legal business identity and actual Twilio account ownership, then choose the appropriate Brand/registration path from Twilio’s current rules. Do not submit a Brand, Campaign, Trust Hub profile, or phone number as part of this website release.
 
 
 ## Registration fields and route — pending confirmation
@@ -161,8 +160,10 @@ These are proposed values for review, not a completed registration. No Twilio co
 | Facebook or other lead sources | Not covered by the website evidence. Confirm each actual source and its separate consent language/evidence before listing it |
 | Twilio account, Brand, Campaign, Messaging Service, numbers | Missing; inspect existing resources and reuse the correct ones where appropriate |
 
-Current official guidance reviewed October 3, 2026:
+Current official guidance reviewed October 5, 2026:
 
+- [Opt-in must allow consumers to decline, error 30931](https://www.twilio.com/docs/api/errors/30931)
+- [Privacy policy mobile-information non-sharing, error 30932](https://www.twilio.com/docs/api/errors/30932)
 - [Required business and campaign information](https://www.twilio.com/docs/messaging/compliance/a2p-10dlc/collect-business-info)
 - [Direct Standard / Low-Volume Standard onboarding](https://www.twilio.com/docs/messaging/compliance/a2p-10dlc/direct-standard-onboarding)
 - [ISV customer onboarding](https://www.twilio.com/docs/messaging/compliance/a2p-10dlc/onboarding-isv-api)

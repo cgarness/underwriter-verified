@@ -1,7 +1,7 @@
 import { A2P_SITE_ORIGIN, CARRIER_LIABILITY_STATEMENT, normalizeBrandText } from "@/lib/a2pBrand";
 
-/** Must match sms_disclosure_versions.id in the intake migration. */
-export const SMS_DISCLOSURE_VERSION_ID = "2026-09-29-separate-sms";
+/** Must match the current sms_disclosure_versions.id in the forward policy migration. */
+export const SMS_DISCLOSURE_VERSION_ID = "2026-10-05-policy-clarifications";
 
 export const SMS_INFORMATIONAL_TEMPLATE =
   "I agree to receive recurring informational SMS/MMS from {sender} about my requested quote, appointments, and application or policy updates.";

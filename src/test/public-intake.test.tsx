@@ -41,6 +41,10 @@ function fillCallForm() {
 
 describe("public intake forms", () => {
   afterEach(() => vi.unstubAllEnvs());
+
+  it("uses the October 5 policy clarification disclosure version", () => {
+    expect(SMS_DISCLOSURE_VERSION_ID).toBe("2026-10-05-policy-clarifications");
+  });
   beforeEach(() => {
     vi.mocked(supabase.rpc).mockReset();
     vi.mocked(supabase.rpc).mockResolvedValue(saved as never);

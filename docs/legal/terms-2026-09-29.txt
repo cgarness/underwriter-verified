@@ -1,3 +1,5 @@
+Archive of the public page source that was effective September 29, 2026 through October 5, 2026. Kept so consent records can be compared with the wording that was live before the October 5, 2026 policy clarification update. Not a route.
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -41,9 +43,8 @@ const TermsAndConditions: React.FC = () => {
           <h1 className="text-3xl font-bold text-foreground">Terms and Conditions for {brand.agency}</h1>
           <p className="text-sm text-muted-foreground">Effective Date: {PRIVACY_EFFECTIVE_LABEL}</p>
           <p className="text-sm text-muted-foreground">
-            This version replaces the {PRIOR_POLICY_EFFECTIVE_LABEL} terms. The two separate,
-            optional SMS choices remain unchanged; this update clarifies that a call request alone
-            does not authorize SMS and strengthens the mobile-information non-sharing language.
+            This version replaces the {PRIOR_POLICY_EFFECTIVE_LABEL} terms. The forms now use two
+            separate SMS choices instead of one combined communication consent.
           </p>
         </header>
 
@@ -110,11 +111,9 @@ const TermsAndConditions: React.FC = () => {
         <section className="space-y-3">
           <h2 className="text-xl font-semibold text-foreground">4. Phone &amp; Email Communications</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            A call request by itself asks us to contact you about scheduling a call. It is not a
-            confirmed appointment, and by itself it does not authorize informational or marketing
-            SMS/MMS, marketing email, or prerecorded or autodialed calls. If you separately select
-            one of the optional SMS checkboxes described in Section 3, that checkbox grants only the
-            corresponding SMS permission stated there.
+            A call request asks us to contact you about scheduling a call. It is not a confirmed
+            appointment, and it does not authorize recurring marketing texts, informational texts,
+            marketing email, or prerecorded or autodialed calls.
           </p>
         </section>
 
