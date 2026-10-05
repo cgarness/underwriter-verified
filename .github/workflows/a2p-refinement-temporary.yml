@@ -35,11 +35,14 @@ jobs:
       - name: Diff whitespace check
         run: git diff --check origin/main...HEAD
       - name: Start local PostgreSQL
-        run: |
-          sudo chmod -R a+rX "$GITHUB_WORKSPACE"
-          sudo systemctl start postgresql
+        run: sudo systemctl start postgresql
       - name: Release-order SQL harness
-        run: bash scripts/test-intake-sql.sh --release-order
+        run: |
+          rm -rf /tmp/uv-a2p-sql
+          cp -a "$GITHUB_WORKSPACE" /tmp/uv-a2p-sql
+          chmod -R a+rX /tmp/uv-a2p-sql
+          cd /tmp/uv-a2p-sql
+          bash scripts/test-intake-sql.sh --release-order
       - name: Production build
         env:
           VERCEL_ENV: production
