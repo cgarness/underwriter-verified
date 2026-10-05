@@ -132,6 +132,7 @@ describe("A2P campaign surfaces", () => {
 
     expect(screen.getByRole("heading", { name: /privacy policy for cg financial/i })).toBeInTheDocument();
     expect(screen.getByText(SMS_NON_SHARING_STATEMENT)).toBeInTheDocument();
+    expect(document.body.textContent).toMatch(/two separate, optional SMS choices remain unchanged/i);
     expect(screen.getByText(/message frequency varies/i)).toBeInTheDocument();
     expect(document.body.textContent).toMatch(/Carriers are not liable for any delayed or undelivered messages/i);
   });

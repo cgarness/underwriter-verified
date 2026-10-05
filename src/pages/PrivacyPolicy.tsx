@@ -41,8 +41,9 @@ const PrivacyPolicy: React.FC = () => {
           <h1 className="text-3xl font-bold text-foreground">Privacy Policy for {brand.agency}</h1>
           <p className="text-sm text-muted-foreground">Effective Date: {PRIVACY_EFFECTIVE_LABEL}</p>
           <p className="text-sm text-muted-foreground">
-            This version replaces the {PRIOR_POLICY_EFFECTIVE_LABEL} policy. That earlier version
-            described one combined communication consent. The forms no longer use that wording.
+            This version replaces the {PRIOR_POLICY_EFFECTIVE_LABEL} policy. The two separate,
+            optional SMS choices remain unchanged; this update clarifies mobile-information
+            non-sharing and the limited processing needed for requested services and permitted texts.
           </p>
         </header>
 

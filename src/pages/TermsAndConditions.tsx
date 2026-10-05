@@ -41,8 +41,9 @@ const TermsAndConditions: React.FC = () => {
           <h1 className="text-3xl font-bold text-foreground">Terms and Conditions for {brand.agency}</h1>
           <p className="text-sm text-muted-foreground">Effective Date: {PRIVACY_EFFECTIVE_LABEL}</p>
           <p className="text-sm text-muted-foreground">
-            This version replaces the {PRIOR_POLICY_EFFECTIVE_LABEL} terms. The forms now use two
-            separate SMS choices instead of one combined communication consent.
+            This version replaces the {PRIOR_POLICY_EFFECTIVE_LABEL} terms. The two separate,
+            optional SMS choices remain unchanged; this update clarifies that a call request alone
+            does not authorize SMS and strengthens the mobile-information non-sharing language.
           </p>
         </header>
 
