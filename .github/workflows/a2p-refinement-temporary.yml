@@ -35,7 +35,9 @@ jobs:
       - name: Diff whitespace check
         run: git diff --check origin/main...HEAD
       - name: Start local PostgreSQL
-        run: sudo systemctl start postgresql
+        run: |
+          sudo chmod -R a+rX "$GITHUB_WORKSPACE"
+          sudo systemctl start postgresql
       - name: Release-order SQL harness
         run: bash scripts/test-intake-sql.sh --release-order
       - name: Production build
