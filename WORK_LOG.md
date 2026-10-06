@@ -1,3 +1,7 @@
+## 2026-10-05 — AgentFlow consent bridge isolated build
+
+Chris approved the paired implementation plan. Added the HMAC-scoped eligibility/suppression endpoint and transactional outbox with authenticated delivery worker; no mapping, secret, cron or activation was applied. Website legal UI and production remain unchanged. Existing 57 tests/build pass; paired SQL and Edge evidence lives in AgentFlow's `docs/plans/2026-10-05-sms-consent/verification.md`. Native provider/browser checks remain release gates. See `docs/AGENTFLOW_CONSENT_BRIDGE.md`.
+
 # Work Log
 
 ## 2026-10-05 — CG Financial A2P website refinement release candidate

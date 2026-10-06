@@ -117,3 +117,7 @@ If production intake must be stopped, revoke the public intake RPC only through 
 ## Approval gate
 
 Gate 2 requires Chris's explicit approval of the tested PR head, exact migration SQL, and release sequence. Until then, production remains unchanged.
+
+## Paired AgentFlow integration
+
+For the separately approved consent bridge release, follow `docs/AGENTFLOW_CONSENT_BRIDGE.md`. Do not replay the hosted October 5 policy migration or infer SMS activation from a website deploy.

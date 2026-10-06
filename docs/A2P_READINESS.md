@@ -175,3 +175,7 @@ Fee review remains provisional: Twilio's indexed Help Center schedule quotes **$
 ## Future AgentFlow integration boundary
 
 This site retains agent/profile-scoped evidence with immutable sender identity, purpose, path, disclosure version/text, and timestamps. The planned AgentFlow wizard is agency-level. Before connecting them, define and verify the agency-to-profile/Brand mapping and suppression scope; do not assume a grant for one sender/profile covers every agent at that agency. This release does not change AgentFlow, its dialer, its database, or provider sending configuration.
+
+## AgentFlow consent bridge — isolated implementation (October 5, 2026)
+
+The additive bridge implementation is prepared on `codex/agentflow-consent-bridge-20261005`. It is **not deployed or activated**. Website production remains the October 5 policy release. See `docs/AGENTFLOW_CONSENT_BRIDGE.md` for its exact activation boundary, secrets, worker, and rollback constraints. The website still does not send SMS.
