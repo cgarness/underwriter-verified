@@ -1,3 +1,9 @@
 project_id = "jzdzeevjpootbeuniygx"
 [functions.generate-testimonials]
 verify_jwt = true
+
+[functions.agentflow-consent]
+verify_jwt = false
+
+[functions.consent-event-worker]
+verify_jwt = false

@@ -1,3 +1,11 @@
+## 2026-10-08 — AgentFlow consent bridge production preparation
+
+Chris authorized getting SMS working. Applied the byte-identical bridge migration as hosted 20261008022320 and guarded CG Financial mapping as 20261008022521. Deployed agentflow-consent and consent-event-worker v1; all source files were read back byte-identical and unauthenticated requests were rejected. Relay remains disabled with no activation watermark while credentials/recovery workers and the coordinated SMS activation are completed. No frontend/legal change is part of this release. One pre-existing intake/two consent events were found and are not replayed. No form or SMS was submitted by this release.
+
+## 2026-10-05 — AgentFlow consent bridge isolated build
+
+Chris approved the paired implementation plan. Added the HMAC-scoped eligibility/suppression endpoint and transactional outbox with authenticated delivery worker; no mapping, secret, cron or activation was applied. Website legal UI and production remain unchanged. Existing 57 tests/build pass; paired SQL and Edge evidence lives in AgentFlow's `docs/plans/2026-10-05-sms-consent/verification.md`. Native provider/browser checks remain release gates. See `docs/AGENTFLOW_CONSENT_BRIDGE.md`.
+
 # Work Log
 
 ## 2026-10-05 — CG Financial A2P website refinement release candidate
