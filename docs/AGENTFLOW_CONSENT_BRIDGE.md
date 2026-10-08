@@ -1,6 +1,6 @@
 # AgentFlow consent bridge release review
 
-Status: isolated implementation complete; coordinated production release is not authorized by the implementation approval. Do not apply migrations or deploy from this document automatically.
+Status: October 8 production preparation applied under Chris's instruction to get SMS working. Both functions and the guarded CG Financial mapping are deployed; relay remains disabled pending secret administration and coordinated activation. The release order below remains the safety boundary.
 
 Baseline: website production commit `8a1d81e78d096c521b325b2b8232c204007e881e`, active project `jzdzeevjpootbeuniygx`. Preserve the applied October 5 policy migration and historical September 29 evidence. Retired projects are outside scope.
 

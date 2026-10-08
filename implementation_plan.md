@@ -208,3 +208,8 @@ Historical fixture files that intentionally represent old evidence (for example 
 **Gate 2 — next:** present the exact PR head, diff/file list, diagnostics, tests, rendered-route results, exact generated migration SQL, and release sequence. Chris must explicitly approve merge/deploy and the exact production database action.
 
 **Gate 3 — after approved deployment:** re-read the exact production commit/deployment and five live pages, then report remaining registration/sending limitations and prepare the AgentFlow handoff. Twilio/TCR submission remains outside this release.
+
+
+## October 8 SMS activation authorization
+
+Chris instructed getting SMS working after A2P approval. The prepared backend release and guarded mapping are now applied with sending/relay paused. Complete secret provisioning, authenticated recovery, five-number registration and controlled consenting-recipient verification before activation. Earlier pending-approval notes describe the previous phase.
