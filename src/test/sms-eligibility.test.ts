@@ -73,6 +73,29 @@ describe("SMS eligibility", () => {
       }).reason,
     ).toBe("invalid_class");
   });
+
+  it("allows verified informational re-enrollment without restoring marketing", () => {
+    const restored = {
+      hasSuppression: true,
+      hasInformationalGrant: true,
+      hasMarketingGrant: true,
+      hasInformationalReenrollment: true,
+    };
+    expect(decideSmsEligibility({ ...restored, messageClass: "informational" }))
+      .toEqual({ allowed: true, reason: "granted" });
+    expect(decideSmsEligibility({ ...restored, messageClass: "marketing" }))
+      .toEqual({ allowed: false, reason: "suppressed" });
+  });
+
+  it("never substitutes START for an original informational grant", () => {
+    expect(decideSmsEligibility({
+      messageClass: "informational",
+      hasSuppression: true,
+      hasInformationalGrant: false,
+      hasMarketingGrant: true,
+      hasInformationalReenrollment: true,
+    }).allowed).toBe(false);
+  });
 });
 
 describe("disclosure text stored by the migrations", () => {

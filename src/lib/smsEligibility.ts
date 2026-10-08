@@ -7,13 +7,16 @@ export interface SmsEligibilityInput {
   hasSuppression: boolean;
   hasInformationalGrant: boolean;
   hasMarketingGrant: boolean;
+  /** Effective, server-verified restoration; never inferred from a raw START body. */
+  hasInformationalReenrollment?: boolean;
 }
 
 /**
  * Same decision table as public.evaluate_sms_eligibility.
  * A later unchecked box is "no new grant" and does not erase an earlier grant.
  * A suppression blocks both purposes until a separate re-enrollment exists.
- * This repository has no re-enrollment path and no outbound sender.
+ * Only a verified, synchronized START lifecycle can restore informational consent.
+ * This repository has no outbound sender.
  */
 export function decideSmsEligibility(input: SmsEligibilityInput): {
   allowed: boolean;
@@ -22,7 +25,7 @@ export function decideSmsEligibility(input: SmsEligibilityInput): {
   if (input.messageClass !== "informational" && input.messageClass !== "marketing") {
     return { allowed: false, reason: "invalid_class" };
   }
-  if (input.hasSuppression) {
+  if (input.hasSuppression && !(input.messageClass === "informational" && input.hasInformationalReenrollment)) {
     return { allowed: false, reason: "suppressed" };
   }
   const purpose = input.messageClass as SmsPurpose;

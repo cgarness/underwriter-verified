@@ -1,6 +1,6 @@
 # AgentFlow consent bridge release review
 
-Status: October 8 production preparation applied under Chris's instruction to get SMS working. Both functions and the guarded CG Financial mapping are deployed; relay remains disabled pending secret administration and coordinated activation. The release order below remains the safety boundary.
+Status: the original bridge was activated October 8 and one informational confirmation was independently verified delivered; see the newer work-log entry. The preparation steps below are historical. A separate, approved-but-unreleased informational START candidate is documented in [SMS_START_REENROLLMENT.md](SMS_START_REENROLLMENT.md). It defaults disabled and does not change production until its own coordinated release.
 
 Baseline: website production commit `8a1d81e78d096c521b325b2b8232c204007e881e`, active project `jzdzeevjpootbeuniygx`. Preserve the applied October 5 policy migration and historical September 29 evidence. Retired projects are outside scope.
 
