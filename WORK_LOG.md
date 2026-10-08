@@ -1,3 +1,13 @@
+## 2026-10-08 — START review publication and CI approved
+
+Chris approved publishing both review branches as draft PRs and running the remaining CI at October 7, 22:21 PDT. This approval does not include production migrations, deployment, activation or a live SMS test. Publication preserves the reviewed source tree; the paired AF workflow must reference the actual UV published commit. Final CI outcomes and the production gate are recorded on the paired PRs.
+
+## 2026-10-08 — Informational START lifecycle candidate; production unchanged
+
+Chris approved the paired informational-only implementation. On `codex/sms-start-20261008`, based on `fe5c9a6beff1027349cea422f8b5b20b68a733c5`, added disabled-by-default forward migration `20261008044801_sms_start_reenrollment.sql`, immutable ordered lifecycle receipts, independent revocation evidence and a signed lifecycle action. A real pre-STOP informational grant plus verified fresh START can restore informational eligibility only. Marketing and independent revocations remain blocked; original STOP and grant evidence is retained. The acknowledgment reports effective informational permission for AF's fail-closed handoff. New data/RPCs are server-only with RLS and SECURITY INVOKER; existing guarded function ACLs are retained.
+
+Verification passes: 59 UV tests, root and app TypeScript, scoped lint/diff and production build; 103 paired disposable PGlite assertions; 46 paired Deno tests and eight Edge entry-point checks using the same-version installed dependency adapter. Native PostgreSQL contention, exact published-head CI, provider/program-wording review and live validation remain release gates. No frontend/legal text, disclosure version, production SQL/deployment, provider resource, form or SMS was changed. See `docs/SMS_START_REENROLLMENT.md` and the AF release record. Publishing review branches/CI and then production release/testing require their separate gates; do not activate from this work-log entry.
+
 ## 2026-10-08 — Consent bridge activated and informational confirmation delivered
 
 Chris approved server credentials and an informational opt-in/test to his own confirmed phone. Created the scoped bridge/worker secrets, matching worker Vault entry and authenticated one-minute outbox recovery (hosted 20261008033219). Fixed exact Edge public/runtime path handling with canonical-path HMAC unchanged; agentflow-consent v3 was deployed and every file read back exact. A real service_role call exposed missing EXECUTE on normalize_us_phone_e164; hosted 20261008034841 grants only that server role, preserving anon/authenticated denial and SECURITY INVOKER. The SQL bootstrap now models those production function ACLs rather than silently granting every function to service_role.

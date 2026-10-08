@@ -43,6 +43,43 @@ export async function handle(req: Request) {
       p_agent: body.profile_id,
       p_phone: phone(body.phone),
     };
+    if (body.action === "lifecycle") {
+      if (
+        !Number.isSafeInteger(body.revision) || body.revision < 1 ||
+        typeof body.restored !== "boolean" ||
+        (!body.restored &&
+          [
+            body.start_event,
+            body.prior_event,
+            body.first_stop_at,
+            body.start_at,
+          ].some((v) => v != null)) ||
+        (body.restored &&
+          (!UUID.test(body.start_event ?? "") ||
+            !UUID.test(body.prior_event ?? "") ||
+            !Number.isFinite(Date.parse(body.first_stop_at)) ||
+            !Number.isFinite(Date.parse(body.start_at))))
+      ) {
+        throw new SmsError("LIFECYCLE_INPUT", "Invalid lifecycle event.", 400);
+      }
+      const { data, error } = await db.rpc("agentflow_consent_lifecycle", {
+        ...args,
+        p_revision: body.revision,
+        p_restored: body.restored,
+        p_start_event: body.start_event ?? null,
+        p_prior_event: body.prior_event ?? null,
+        p_first_stop: body.first_stop_at ?? null,
+        p_start_at: body.start_at ?? null,
+      });
+      if (error || !data) {
+        throw new SmsError(
+          "LIFECYCLE_UNAVAILABLE",
+          "Could not record lifecycle event.",
+          503,
+        );
+      }
+      return json(data);
+    }
     if (body.action === "eligibility") {
       const { data, error } = await db.rpc("agentflow_consent_check", {
         ...args,
