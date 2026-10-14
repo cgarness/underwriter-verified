@@ -1,3 +1,7 @@
+## 2026-10-14 — Audited informational re-enrollment
+
+Added private append-only restoration evidence for the owner's explicit new permission to receive ClearPath lead alerts. Original STOP and website evidence preserved. Marketing stays blocked; repeated STOP and provider blocks remain effective. No public/service-role restoration writes or new public RPC. Eight rollback-only database assertions passed; migration applied, owner authorization recorded separately, eligibility read back informational allowed/marketing suppressed. See docs/informational-sms-reenrollment.md. Alert delivery verification remains separate; no A2P or sender configuration changed.
+
 ## 2026-10-08 — Consent bridge activated and informational confirmation delivered
 
 Chris approved server credentials and an informational opt-in/test to his own confirmed phone. Created the scoped bridge/worker secrets, matching worker Vault entry and authenticated one-minute outbox recovery (hosted 20261008033219). Fixed exact Edge public/runtime path handling with canonical-path HMAC unchanged; agentflow-consent v3 was deployed and every file read back exact. A real service_role call exposed missing EXECUTE on normalize_us_phone_e164; hosted 20261008034841 grants only that server role, preserving anon/authenticated denial and SECURITY INVOKER. The SQL bootstrap now models those production function ACLs rather than silently granting every function to service_role.
