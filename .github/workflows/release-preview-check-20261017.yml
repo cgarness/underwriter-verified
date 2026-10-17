@@ -1,0 +1,33 @@
+name: Verify agent link previews (temporary release check)
+
+on:
+  push:
+    branches:
+      - codex/agent-sms-link-preview-20261017
+
+permissions:
+  contents: read
+
+jobs:
+  preview-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: TypeScript
+        run: |
+          npx tsc --noEmit
+          npx tsc -p tsconfig.app.json --noEmit
+      - name: Full unit test suite
+        run: npm test
+      - name: ESLint
+        run: npm run lint
+      - name: Production Vite build
+        run: VERCEL_ENV=production npm run build
