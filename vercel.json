@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "^/(?!api(?:/|$)|agent-admin(?:/|$)|assets(?:/|$))([a-z0-9][a-z0-9-]*)/([a-z0-9][a-z0-9-]*)/?$",
-      "destination": "/api/profile-page?agency=$1&agent=$2"
+      "source": "/:agency((?!api|agent-admin|assets)[a-z0-9-]+)/:agent([a-z0-9-]+)",
+      "destination": "/api/profile-page?agency=:agency&agent=:agent"
     },
     {
       "source": "/(.*)",
