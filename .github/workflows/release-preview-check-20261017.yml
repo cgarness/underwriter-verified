@@ -1,6 +1,9 @@
 name: Verify agent link previews (temporary release check)
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - codex/agent-sms-link-preview-20261017
