@@ -1,0 +1,93 @@
+name: Apply approved UV profile build
+on:
+  push:
+    branches: ['codex/uv-profile-sync-20261017']
+    paths: ['scripts/tests/uv-profile/build-patch.txt']
+permissions:
+  contents: read
+jobs:
+  apply-exact-build:
+    if: github.repository == 'cgarness/underwriter-verified' && github.ref == 'refs/heads/codex/uv-profile-sync-20261017'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: '12116751692'
+          run-id: '39074722319'
+          repository: cgarness/underwriter-verified
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/uv-resolved-workspace
+          merge-multiple: true
+      - name: Validate and commit exact source manifest; no application execution
+        env:
+          EXPECTED_REPOSITORY: cgarness/underwriter-verified
+          EXPECTED_BRANCH: codex/uv-profile-sync-20261017
+        run: |
+          python3 - <<'PY'
+          import base64, gzip, hashlib, io, json, os, subprocess
+          from pathlib import Path
+          def git(*args):
+              return subprocess.check_output(['git', *args]).decode().strip()
+          repo = os.environ['EXPECTED_REPOSITORY']
+          branch = os.environ['EXPECTED_BRANCH']
+          head = os.environ['GITHUB_SHA']
+          assert os.environ['GITHUB_REPOSITORY'] == repo
+          assert os.environ['GITHUB_REF'] == 'refs/heads/' + branch
+          assert git('rev-parse', 'HEAD') == head
+          payloads = [Path('scripts/tests/uv-profile/build-patch.part-1'), Path('scripts/tests/uv-profile/build-patch.part-2'), Path('scripts/tests/uv-profile/build-patch.txt')]
+          encoded = ''.join(p.read_text().strip() for p in payloads) + '\n'
+          assert len(encoded) < 100000
+          assert hashlib.sha256(encoded.encode()).hexdigest() == 'e21c589c6dc5db0193a7c25a763463a838e55ef831e1540c2726248de702d0a1'
+          with gzip.GzipFile(fileobj=io.BytesIO(base64.b64decode(encoded.strip(), validate=True))) as f:
+              raw = f.read(1000001)
+          assert len(raw) <= 1000000
+          manifest = json.loads(raw)
+          assert manifest['repository'] == repo and manifest['branch'] == branch
+          assert manifest['base_sha'] == 'eac031bec7f4ae177cdab4b9ce2f7303a0e3a88e'
+          subprocess.run(['git', 'merge-base', '--is-ancestor', manifest['base_sha'], head], check=True)
+          assert not git('status', '--porcelain')
+          files = manifest['files']
+          assert 1 <= len(files) <= 60
+          for name, hashes in files.items():
+              path = Path(name)
+              assert not path.is_absolute() and '..' not in path.parts and not any(p.startswith('.env') or p == '.git' for p in path.parts)
+              assert not name.startswith('.github/') and str(path) == name
+              assert not path.is_symlink()
+              if hashes['before'] is None:
+                  assert not path.exists(), name
+              else:
+                  assert git('hash-object', name) == hashes['before'], name
+          patch = Path(os.environ['RUNNER_TEMP']) / 'reviewed-uv-build.patch'
+          patch.write_text(manifest['patch'])
+          subprocess.run(['git', 'apply', '--check', str(patch)], check=True)
+          subprocess.run(['git', 'apply', str(patch)], check=True)
+          lock = Path(os.environ['RUNNER_TEMP']) / 'uv-resolved-workspace/repaired-package-lock.json'
+          data = lock.read_bytes()
+          assert hashlib.sha256(data).hexdigest() == manifest['lock_artifact']['sha256'] == 'a040d31eef41390b0e9bb2588fde631f929f6c9aaaee0b207617279cd0f3ea80'
+          Path('package-lock.json').write_bytes(data)
+          for name, hashes in files.items():
+              assert git('hash-object', name) == hashes['after'], name
+          changed = set(git('diff', '--name-only').splitlines()) | set(git('ls-files', '--others', '--exclude-standard').splitlines())
+          assert changed == set(files), (changed, set(files))
+          for path in payloads:
+              path.unlink()
+          subprocess.run(['git', 'add', '--', *files, *map(str, payloads)], check=True)
+          staged = set(git('diff', '--cached', '--name-only').splitlines())
+          assert staged == set(files) | set(map(str, payloads))
+          subprocess.run(['git', 'diff', '--cached', '--check'], check=True)
+          subprocess.run(['git', 'config', 'user.name', 'github-actions[bot]'], check=True)
+          subprocess.run(['git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], check=True)
+          subprocess.run(['git', 'commit', '-m', 'feat: build authenticated AgentFlow profile receiver and public visibility controls'], check=True)
+          remote = git('ls-remote', 'origin', 'refs/heads/' + branch).split()[0]
+          assert remote == head, 'Concurrent branch update; stop without force push'
+          subprocess.run(['git', 'push', 'origin', 'HEAD:refs/heads/' + branch], check=True)
+          print('APPROVED_UV_BUILD_COMMIT=' + git('rev-parse', 'HEAD'))
+          PY
