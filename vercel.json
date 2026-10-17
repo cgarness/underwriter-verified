@@ -1,8 +1,17 @@
 {
   "rewrites": [
     {
+      "source": "^/(?!api(?:/|$)|agent-admin(?:/|$)|assets(?:/|$))([a-z0-9][a-z0-9-]*)/([a-z0-9][a-z0-9-]*)/?$",
+      "destination": "/api/profile-page?agency=$1&agent=$2"
+    },
+    {
       "source": "/(.*)",
       "destination": "/"
     }
-  ]
+  ],
+  "functions": {
+    "api/profile-page.ts": {
+      "includeFiles": "dist/index.html"
+    }
+  }
 }
