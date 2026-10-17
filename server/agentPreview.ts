@@ -46,8 +46,8 @@ export async function getPublicAgent(
   const row = rows[0];
   if (!row || typeof row.name !== "string" || !row.name.trim()) return null;
   return {
-    name: row.name.slice(0, 120).trim(),
-    agency: typeof row.agency === "string" ? row.agency.slice(0, 120).trim() : "",
+    name: row.name.replace(/\\s+/g, " ").slice(0, 120).trim(),
+    agency: typeof row.agency === "string" ? row.agency.replace(/\\s+/g, " ").slice(0, 120).trim() : "",
     headshot_url: typeof row.headshot_url === "string" ? row.headshot_url : "",
   };
 }
