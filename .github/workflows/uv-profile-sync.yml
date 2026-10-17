@@ -2,16 +2,20 @@ name: UV profile sync verification
 on:
   push:
     branches: ['codex/uv-profile-sync-20261017']
-    paths: ['.github/workflows/uv-profile-sync.yml', 'src/**', 'supabase/**', 'server/**', 'api/**', 'scripts/tests/uv-profile/**']
+  pull_request:
+    paths: ['src/**', 'server/**', 'api/**', 'supabase/**', 'package-lock.json', '.github/workflows/uv-profile-sync.yml']
 permissions:
   contents: read
 concurrency:
   group: uv-profile-sync-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  isolated-build:
+  public-profile:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
+    env:
+      VITE_SUPABASE_URL: http://127.0.0.1:54321
+      VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_synthetic_test_only
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -19,33 +23,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22.16.0'
-      # The inherited npm lock is stale. Capture a repaired candidate separately;
-      # do not commit dependency changes or access deployment credentials here.
-      - run: |
-          cp package-lock.json "$RUNNER_TEMP/original-package-lock.json"
-          npm install --ignore-scripts --no-audit --no-fund
-          cp package-lock.json "$RUNNER_TEMP/repaired-package-lock.json"
-          cp "$RUNNER_TEMP/original-package-lock.json" package-lock.json
-      - name: Source and dependency workspace for authenticated build session
-        run: |
-          python3 - <<'PY'
-          import os, subprocess, tarfile, shutil
-          from pathlib import Path
-          destination = Path(os.environ['RUNNER_TEMP']) / 'uv-build-workspace'
-          destination.mkdir()
-          with tarfile.open(destination / 'source.tar.gz', 'w:gz') as archive:
-              for item in subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0'):
-                  if not item or any(part.startswith('.env') or part == '.git' for part in Path(item).parts):
-                      continue
-                  if Path(item).is_file():
-                      archive.add(item, arcname=item, recursive=False)
-          with tarfile.open(destination / 'dependencies.tar.gz', 'w:gz') as archive:
-              archive.add('node_modules')
-          shutil.copy(Path(os.environ['RUNNER_TEMP']) / 'repaired-package-lock.json', destination)
-          (destination / 'head.txt').write_text(subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode())
-          PY
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: uv-build-workspace-${{ github.run_id }}
-          path: ${{ runner.temp }}/uv-build-workspace
-          retention-days: 1
+      - run: npm ci
+      - run: npx tsc --noEmit && npx tsc --noEmit -p tsconfig.app.json && npx tsc --noEmit -p tsconfig.node.json
+      - run: npm test
+      - run: npm run build
