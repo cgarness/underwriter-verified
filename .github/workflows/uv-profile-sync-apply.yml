@@ -42,9 +42,11 @@ jobs:
           assert os.environ['GITHUB_REPOSITORY'] == repo
           assert os.environ['GITHUB_REF'] == 'refs/heads/' + branch
           assert git('rev-parse', 'HEAD') == head
-          payloads = [Path('scripts/tests/uv-profile/build-patch.part-1'), Path('scripts/tests/uv-profile/build-patch.part-2'), Path('scripts/tests/uv-profile/build-patch.txt')]
+          payloads = [Path('scripts/tests/uv-profile/build-patch.part-' + str(i)) for i in (1, 2, 3)] + [Path('scripts/tests/uv-profile/build-patch.txt')]
           encoded = ''.join(p.read_text().strip() for p in payloads) + '\n'
           assert len(encoded) < 100000
+          for p in payloads:
+              print(str(p), git('hash-object', str(p)))
           assert hashlib.sha256(encoded.encode()).hexdigest() == 'e21c589c6dc5db0193a7c25a763463a838e55ef831e1540c2726248de702d0a1'
           with gzip.GzipFile(fileobj=io.BytesIO(base64.b64decode(encoded.strip(), validate=True))) as f:
               raw = f.read(1000001)
