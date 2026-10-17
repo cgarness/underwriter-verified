@@ -16,6 +16,8 @@ export type Database = {
     Tables: {
       agents: {
         Row: {
+          is_published: boolean
+          managed_by_agentflow: boolean
           agency: string
           agency_slug: string
           bio: string
@@ -37,6 +39,8 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          is_published?: boolean
+          managed_by_agentflow?: boolean
           agency?: string
           agency_slug?: string
           bio?: string
@@ -58,6 +62,8 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          is_published?: boolean
+          managed_by_agentflow?: boolean
           agency?: string
           agency_slug?: string
           bio?: string

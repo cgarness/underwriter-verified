@@ -1,3 +1,19 @@
+## 2026-10-17 — AgentFlow → Underwriter Verified profile synchronization (approved isolated build; not live)
+
+Chris authorized taking care of the build. Implemented on `codex/uv-profile-sync-20261017`; no main merge, hosted migration/RLS, secret, scheduler, production data or deployment action is authorized or performed. Paired plan and exact release gates: `docs/plans/2026-10-17-agentflow-profile-sync/implementation_plan.md` and `release.md`.
+
+**Changes:** organization/profile UUID mapping, opt-in public contact fields, stable public links, dedicated signed one-way sync, durable revisions/leases/retries/tombstones, fresh canonical AF profile/license reads without profile-save triggers, and public/owner separation. Existing UV owner, URL and consent-linked identity/evidence remain preserved. AF has compact View/Copy/Manage controls in Agent Profile and My Profile, default-off. UV uses published-only reads, synchronous resolved-agent context, neutral missing-photo initials, masked contact actions and server-enforced linked-field ownership; website-only bio/booking/testimonials remain UV-owned. No actual credential verification, intake-to-AF import, owner SSO, SMS or dialer change.
+
+**Files:** scoped plans/release/verification; new focused profile UI/API/hook/tests and/or UV profile/render/admin/metadata integration files; dedicated function/protocol modules; one new unapplied migration per repository; test-only verification workflow. The UV npm lock repair preserves dependency declarations and is detailed in verification.md.
+
+**Verification:** paired SQL/handler harness 18/18 in separate isolated PostgreSQL-WASM engines; UV 83/83 tests; AF 101 targeted protocol/control/hook/profile regressions; root typechecks and builds pass; AF app diagnostics match the 84-diagnostic exact-source baseline. No production or real-browser pass claimed; local browser navigation was administratively blocked. Native PostgreSQL concurrency test is included for CI; exact-head CI outcomes remain to be checked.
+
+**Migrations/deployments:** none applied/deployed. Candidate migration hashes and explicit RLS/function/authentication/activation gates are in release.md.
+
+**Blockers/next:** UV project management access is currently denied; verify live schema/preimages before release. Run exact-head CI, review the paired PRs, approve exact backend phases separately, confirm canonical contact/legal behavior, pilot mapping and publication choices. New-profile intake routing/owner access and real browser acceptance are not assumed complete. Preserve all unrelated concurrent work.
+
+---
+
 ## 2026-10-14 — Audited informational re-enrollment
 
 Added private append-only restoration evidence for the owner's explicit new permission to receive ClearPath lead alerts. Original STOP and website evidence preserved. Marketing stays blocked; repeated STOP and provider blocks remain effective. No public/service-role restoration writes or new public RPC. Eight rollback-only database assertions passed; migration applied, owner authorization recorded separately, eligibility read back informational allowed/marketing suppressed. See docs/informational-sms-reenrollment.md. Alert delivery verification remains separate; no A2P or sender configuration changed.

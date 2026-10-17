@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Save, Plus, Trash2, ArrowLeft, Check, Upload, Sparkles, Loader2, LogOut, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { websiteOwnedFields } from "@/lib/agentProfileEditing";
 import IntakeRequestsPanel from "@/components/IntakeRequestsPanel";
 
 const US_STATES = [
@@ -59,6 +60,7 @@ export default function Admin() {
   const [generatingTestimonials, setGeneratingTestimonials] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [savingProfile, setSavingProfile] = useState(false);
+  const [managedByAgentFlow, setManagedByAgentFlow] = useState(false);
   const [agentId, setAgentId] = useState<string | null>(null);
   const [agentSlug, setAgentSlug] = useState<string | null>(null);
   const [agencySlug, setAgencySlug] = useState<string | null>(null);
@@ -103,6 +105,7 @@ export default function Admin() {
           stateLicenses: existingAgent.state_licenses as string[],
           testimonials: existingAgent.testimonials as { quote: string; name: string }[],
         };
+        setManagedByAgentFlow(existingAgent.managed_by_agentflow === true);
         setAgentId(existingAgent.id);
         setAgentSlug(existingAgent.slug);
         setAgencySlug(existingAgent.agency_slug);
@@ -160,8 +163,8 @@ export default function Admin() {
         .map(formatLicense),
     };
 
-    const nextAgentSlug = slugify(updatedForm.name);
-    const nextAgencySlug = slugify(updatedForm.agency);
+    const nextAgentSlug = managedByAgentFlow ? agentSlug : slugify(updatedForm.name);
+    const nextAgencySlug = managedByAgentFlow ? agencySlug : slugify(updatedForm.agency);
 
     if (!nextAgentSlug || !nextAgencySlug) {
       toast.error("First name, last name, and agency are required before saving.");
@@ -191,7 +194,7 @@ export default function Admin() {
       // user_id has a partial unique index, which PostgREST cannot infer for
       // an onConflict upsert. Update the loaded, owned row explicitly.
       const query = agentId
-        ? supabase.from("agents").update(profile).eq("id", agentId).eq("user_id", user.id)
+        ? supabase.from("agents").update(managedByAgentFlow ? websiteOwnedFields(updatedForm) : profile).eq("id", agentId).eq("user_id", user.id)
         : supabase.from("agents").insert(profile);
       const { data: persistedAgent, error } = await query.select("id, slug, agency_slug").single();
 
@@ -307,36 +310,37 @@ export default function Admin() {
       ) : (
         <div className="container max-w-2xl py-10 space-y-10">
           <IntakeRequestsPanel />
+          {managedByAgentFlow && <p className="text-sm text-muted-foreground">Profile details are managed in AgentFlow.</p>}
           {/* Personal Info */}
           <Section title="Personal Information">
             <div className="grid grid-cols-2 gap-4">
-              <Field label="First Name">
+              <Field label="First Name" disabled={managedByAgentFlow}>
                 <Input value={form.firstName} onChange={(e) => setNameField("firstName", e.target.value)} />
               </Field>
-              <Field label="Last Name">
+              <Field label="Last Name" disabled={managedByAgentFlow}>
                 <Input value={form.lastName} onChange={(e) => setNameField("lastName", e.target.value)} />
               </Field>
             </div>
-            <Field label="Display Name">
+            <Field label="Display Name" disabled={managedByAgentFlow}>
               <Input value={form.name} disabled className="bg-muted text-muted-foreground" />
             </Field>
-            <Field label="Phone Number">
+            <Field label="Phone Number" disabled={managedByAgentFlow}>
               <Input
                 value={form.phone}
                 onChange={(e) => handlePhoneChange(e.target.value)}
                 placeholder="(555) 814-2937"
               />
             </Field>
-            <Field label="Email">
+            <Field label="Email" disabled={managedByAgentFlow}>
               <Input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} />
             </Field>
-            <Field label="Agency Name">
+            <Field label="Agency Name" disabled={managedByAgentFlow}>
               <Input value={form.agency} onChange={(e) => set("agency", e.target.value)} placeholder="e.g. Rivera Insurance Group" />
             </Field>
             <Field label="Calendar Booking URL">
               <Input value={form.calendarUrl} onChange={(e) => set("calendarUrl", e.target.value)} placeholder="https://calendly.com/..." />
             </Field>
-            <Field label="Headshot Photo">
+            <Field label="Headshot Photo" disabled={managedByAgentFlow}>
               <div className="flex items-center gap-4">
                 {form.headshotUrl && (
                   <img
@@ -377,7 +381,7 @@ export default function Admin() {
           </Section>
 
           {/* Credentials */}
-          <Section title="Licenses & Credentials">
+          <Section title="Licenses & Credentials" disabled={managedByAgentFlow}>
             <Field label="National Producer Number (NPN)">
               <Input value={form.npn} onChange={(e) => set("npn", e.target.value)} />
             </Field>
@@ -464,23 +468,23 @@ export default function Admin() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, disabled = false }: { title: string; children: React.ReactNode; disabled?: boolean }) {
   return (
     <div className="space-y-5">
       <div>
         <h2 className="text-xl font-bold text-foreground">{title}</h2>
         <div className="mt-1.5 h-0.5 w-10 rounded-full bg-accent" />
       </div>
-      <div className="space-y-4">{children}</div>
+      <fieldset disabled={disabled} className="space-y-4 disabled:opacity-70">{children}</fieldset>
     </div>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, children, disabled = false }: { label: string; children: React.ReactNode; disabled?: boolean }) {
   return (
-    <div className="space-y-1.5">
+    <fieldset disabled={disabled} className="space-y-1.5 disabled:opacity-70">
       <Label className="text-sm text-muted-foreground">{label}</Label>
       {children}
-    </div>
+    </fieldset>
   );
 }

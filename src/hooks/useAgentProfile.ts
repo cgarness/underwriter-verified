@@ -11,9 +11,10 @@ export function useAgentProfile(agencySlug: string | undefined, agentSlug: strin
 
       const { data, error } = await supabase
         .from("agents")
-        .select("*")
+        .select("name, first_name, last_name, phone, email, agency, npn, bio, short_bio, headshot_url, calendar_url, state_licenses, testimonials")
         .eq("agency_slug", agencySlug)
         .eq("slug", agentSlug)
+        .eq("is_published", true)
         .maybeSingle();
 
       if (error) throw error;
@@ -36,5 +37,8 @@ export function useAgentProfile(agencySlug: string | undefined, agentSlug: strin
       };
     },
     enabled: !!agencySlug && !!agentSlug,
+    staleTime: 0,
+    gcTime: 0,
+    refetchInterval: 60_000,
   });
 }

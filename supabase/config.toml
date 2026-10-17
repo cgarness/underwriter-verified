@@ -7,3 +7,7 @@ verify_jwt = false
 
 [functions.consent-event-worker]
 verify_jwt = false
+
+# Dedicated server-to-server authentication in the handler; never public access.
+[functions.agentflow-profile-sync]
+verify_jwt = false

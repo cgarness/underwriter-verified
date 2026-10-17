@@ -11,6 +11,7 @@ export interface PreviewAgent {
   name: string;
   agency: string;
   headshot_url: string;
+  updated_at?: string;
 }
 
 export const isProfileSlug = (s: string | null): s is string =>
@@ -24,7 +25,8 @@ export async function getPublicAgent(
   if (!isProfileSlug(agency) || !isProfileSlug(agent)) return null;
 
   const params = new URLSearchParams({
-    select: "name,agency,headshot_url",
+    select: "name,agency,headshot_url,updated_at",
+    is_published: "eq.true",
     agency_slug: "eq." + agency,
     slug: "eq." + agent,
     limit: "1",
@@ -49,6 +51,7 @@ export async function getPublicAgent(
     name: row.name.replace(/\s+/g, " ").slice(0, 120).trim(),
     agency: typeof row.agency === "string" ? row.agency.replace(/\s+/g, " ").slice(0, 120).trim() : "",
     headshot_url: typeof row.headshot_url === "string" ? row.headshot_url : "",
+    updated_at: typeof row.updated_at === "string" ? row.updated_at : undefined,
   };
 }
 
@@ -72,7 +75,9 @@ export function buildProfileMetadata(
   const title = name + " | ✅ Agent Verified";
   const description = "✅ Agent Verified · " + agency + " · Underwriter Verified";
   const canonical = escapeHTML(absoluteUrl);
-  const image = escapeHTML(photoUrl);
+  const versionedPhoto = new URL(photoUrl);
+  if (agent.updated_at) versionedPhoto.searchParams.set("v", agent.updated_at);
+  const image = escapeHTML(versionedPhoto.toString());
   const tags = [
     '<meta name="description" content="' + description + '">',
     '<meta property="og:type" content="profile">',

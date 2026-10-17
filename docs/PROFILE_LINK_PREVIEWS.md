@@ -11,7 +11,7 @@ When an agent profile link is sent over SMS/iMessage or shared via messaging/soc
 - `api/profile-page.ts` serves the unchanged compiled Vite SPA shell with server-generated per-agent Open Graph/Twitter metadata and a canonical URL. Bots need no JavaScript. If a read fails, the original SPA shell is returned.
 - `api/agent-photo.ts` serves a public PNG/JPEG/WebP profile headshot from the existing public-read `agents.headshot_url` data URI or redirects for HTTPS-hosted public photos; generic preview artwork is the fallback.
 - `server/agentPreview.ts` reads **only** public agent fields with the site's pre-existing publishable Supabase key, with strict slug validation and HTML escaping. Never use a service-role key here.
-- Cache lifetime is five minutes, but iMessage and other apps may cache independently. Preview layouts and whether title/description are visible are client-controlled.
+- Profile HTML and photo endpoints use no-store so publication changes do not sit in the website CDN cache. Photo metadata uses the current public record version; iMessage and other apps may still cache independently. Preview layouts and whether title/description are visible are client-controlled.
 
 ## Visual text
 Title: `[Agent Name] | ✅ Agent Verified`
