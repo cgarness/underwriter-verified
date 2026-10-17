@@ -19,11 +19,17 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22.16.0'
-      - run: npm ci
+      # The inherited npm lock is stale. Capture a repaired candidate separately;
+      # do not commit dependency changes or access deployment credentials here.
+      - run: |
+          cp package-lock.json "$RUNNER_TEMP/original-package-lock.json"
+          npm install --ignore-scripts --no-audit --no-fund
+          cp package-lock.json "$RUNNER_TEMP/repaired-package-lock.json"
+          cp "$RUNNER_TEMP/original-package-lock.json" package-lock.json
       - name: Source and dependency workspace for authenticated build session
         run: |
           python3 - <<'PY'
-          import os, subprocess, tarfile
+          import os, subprocess, tarfile, shutil
           from pathlib import Path
           destination = Path(os.environ['RUNNER_TEMP']) / 'uv-build-workspace'
           destination.mkdir()
@@ -35,6 +41,7 @@ jobs:
                       archive.add(item, arcname=item, recursive=False)
           with tarfile.open(destination / 'dependencies.tar.gz', 'w:gz') as archive:
               archive.add('node_modules')
+          shutil.copy(Path(os.environ['RUNNER_TEMP']) / 'repaired-package-lock.json', destination)
           (destination / 'head.txt').write_text(subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode())
           PY
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
