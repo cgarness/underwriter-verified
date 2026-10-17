@@ -1,4 +1,4 @@
-import { GENERIC_OG_IMAGE, getPublicAgent } from "../server/agentPreview";
+import { GENERIC_OG_IMAGE, getPublicAgent } from "../server/agentPreview.js";
 
 function fallback(): Response {
   return Response.redirect(GENERIC_OG_IMAGE, 302);
