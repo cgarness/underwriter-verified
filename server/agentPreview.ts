@@ -35,7 +35,6 @@ export async function getPublicAgent(
     method: "GET",
     headers: {
       apikey: PUBLISHABLE_KEY,
-      Authorization: "Bearer " + PUBLISHABLE_KEY,
       Accept: "application/json",
     },
     signal,
