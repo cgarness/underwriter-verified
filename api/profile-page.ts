@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { buildProfileMetadata, getPublicAgent, isProfileSlug } from "../server/agentPreview";
+import { buildProfileMetadata, getPublicAgent, isProfileSlug } from "../server/agentPreview.js";
 
 // Bundle the exact Vite-generated HTML shell (including hashed JS/CSS assets).
 // The Vercel function's includeFiles setting packages dist/index.html.
