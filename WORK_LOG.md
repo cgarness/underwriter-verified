@@ -1,3 +1,17 @@
+## 2026-10-18 — profile sync: Claude Code access check and receiver-side preflight (read-only; NOT live)
+
+**Status:** No production change; source unchanged at 397dbb91e42aebc83043d9f5605824ff2ba87211; this entry's commit is docs-only. Draft PR #18 open; AF companion #456 at bf536191cab043bca2089d02dee8a6955ededc28.
+
+**Access:** this project's management API denies every read for the Supabase connector, which is authorized only for the AGENTFLOW organization; this project is in organization `bmuykmwtwicpltmpenqm`. Container egress denies the website and Supabase hosts. Gate A stays blocked on access, not on code.
+
+**Verified:** heads/checks green; hashes match; production bundle and canonical metadata unchanged; candidate reviewed with no source defect. Gate A live-only checks and exact package are in the scoped release.md.
+
+**Found:** live A2P privacy/terms pages render the agents row phone/email; AF data would currently publish one license of five; `submit_public_intake` lacks published/owner checks; Verified/licensed wording is unconditional. Provisioning stays off; remedy R1–R4 proposed, not built.
+
+**Proposed invariant (no AGENT_RULES.md exists here; not created):** provisioning a page requires owner access, intake routing, consent-safe legal contact surfaces and truthful wording; a consent/A2P-linked page is never synchronized with blank or changed contacts without explicit review.
+
+---
+
 ## 2026-10-18 — corrected build and isolated browser evidence; production blocked
 
 AF f9fdf29a0a56fdbc1571d49604d7f8663dd00c88 profile run [39095262986](https://github.com/cgarness/agentflow-life-insure/actions/runs/39095262986) passed all three jobs: 98 frontend tests, 21 native PostgreSQL paired cases including concurrent workers, both complete Deno entrypoints, root TypeScript, unchanged 84-diagnostic app baseline, changed-TypeScript lint and build. Browser job 117580270476 passed at 1440px and 390px with real AF/UV components and isolated synthetic transport/auth. Artifact 12124042522 contains screenshots and summary. Coverage includes publication/contact choices, Syncing/Published, canonical View/Copy, public content/photo/NPN/licenses, search, withdrawal, and sign-out/View As isolation. No production network writes or consumer submissions. Initial captures preceded entrance-animation completion; the AF test-only follow-up scrolls sections and waits for animations for reviewable screenshots. The final exact-head runs and artifact IDs are recorded on the paired PRs after this documentation commit.
