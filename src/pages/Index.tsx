@@ -14,6 +14,7 @@ import LegalSection from "@/components/LegalSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import { Loader2 } from "lucide-react";
+import ManagedContactCard from "@/components/ManagedContactCard";
 
 export default function Index() {
   const { agencySlug, agentSlug } = useParams<{ agencySlug: string; agentSlug: string }>();
@@ -22,7 +23,7 @@ export default function Index() {
     isLoading
       ? "Loading profile"
       : agent
-        ? `${agent.name} | ${agent.agency || "Licensed Life Insurance Agent"}`
+        ? `${agent.name} | ${agent.contactCardOnly ? "Agent Profile" : agent.agency || "Licensed Life Insurance Agent"}`
         : "Agent Not Found"
   );
 
@@ -42,6 +43,8 @@ export default function Index() {
       </div>
     );
   }
+
+  if (agent.contactCardOnly) return <ManagedContactCard agent={agent} />;
 
   return (
     <PublicAgentDataProvider key={`${agencySlug}/${agentSlug}`} data={agent}>

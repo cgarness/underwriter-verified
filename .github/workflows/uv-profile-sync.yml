@@ -42,5 +42,7 @@ jobs:
       - run: npx tsc --noEmit && npx tsc --noEmit -p tsconfig.app.json && npx tsc --noEmit -p tsconfig.node.json
       - name: Lint changed TypeScript including Edge and shared modules
         run: npx eslint api/agent-photo.ts api/profile-page.ts server/agentPreview.ts server/uvProfileVisibility.test.ts src/components/BrandContactBlock.tsx src/components/HeroSection.tsx src/contexts/AgentDataContext.tsx src/hooks/useAgentProfile.ts src/integrations/supabase/types.ts src/lib/agentProfileEditing.ts src/pages/Admin.tsx src/pages/Index.tsx src/pages/Search.tsx src/test/uvProfileProtocol.test.ts src/test/uvProfilePublic.test.tsx supabase/functions/_shared/uv-profile supabase/functions/agentflow-profile-sync
+      - name: Lint contact-card changes
+        run: npx eslint server/agentPreview.test.ts src/components/ManagedContactCard.tsx src/hooks/useLegalBrand.ts src/pages/BookCall.tsx src/test/managedContactCard.test.tsx
       - run: npm test
       - run: npm run build

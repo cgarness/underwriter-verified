@@ -8,6 +8,7 @@ const API_URL = "https://jzdzeevjpootbeuniygx.supabase.co";
 const PUBLISHABLE_KEY = "sb_publishable_uPzrTCO-73285tblDxclUQ_2s9shmhF";
 
 export interface PreviewAgent {
+  contact_card_only?: boolean;
   name: string;
   agency: string;
   headshot_url: string;
@@ -25,7 +26,7 @@ export async function getPublicAgent(
   if (!isProfileSlug(agency) || !isProfileSlug(agent)) return null;
 
   const params = new URLSearchParams({
-    select: "name,agency,headshot_url,updated_at",
+    select: "name,agency,headshot_url,updated_at,contact_card_only",
     is_published: "eq.true",
     agency_slug: "eq." + agency,
     slug: "eq." + agent,
@@ -48,6 +49,7 @@ export async function getPublicAgent(
   const row = rows[0];
   if (!row || typeof row.name !== "string" || !row.name.trim()) return null;
   return {
+    contact_card_only: row.contact_card_only === true,
     name: row.name.replace(/\s+/g, " ").slice(0, 120).trim(),
     agency: typeof row.agency === "string" ? row.agency.replace(/\s+/g, " ").slice(0, 120).trim() : "",
     headshot_url: typeof row.headshot_url === "string" ? row.headshot_url : "",
@@ -71,9 +73,9 @@ export function buildProfileMetadata(
   photoUrl: string,
 ): string {
   const name = escapeHTML(agent.name);
-  const agency = escapeHTML(agent.agency || "Licensed Life Insurance Agent");
-  const title = name + " | ✅ Agent Verified";
-  const description = "✅ Agent Verified · " + agency + " · Underwriter Verified";
+  const agency = escapeHTML(agent.agency || (agent.contact_card_only ? "Agent profile" : "Licensed Life Insurance Agent"));
+  const title = name + (agent.contact_card_only ? " | Agent Profile" : " | ✅ Agent Verified");
+  const description = (agent.contact_card_only ? "Agent profile · " : "✅ Agent Verified · ") + agency + " · Underwriter Verified";
   const canonical = escapeHTML(absoluteUrl);
   const versionedPhoto = new URL(photoUrl);
   if (agent.updated_at) versionedPhoto.searchParams.set("v", agent.updated_at);

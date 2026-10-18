@@ -11,7 +11,7 @@ export function useAgentProfile(agencySlug: string | undefined, agentSlug: strin
 
       const { data, error } = await supabase
         .from("agents")
-        .select("name, first_name, last_name, phone, email, agency, npn, bio, short_bio, headshot_url, calendar_url, state_licenses, testimonials")
+        .select("name, first_name, last_name, phone, email, agency, npn, bio, short_bio, headshot_url, calendar_url, state_licenses, testimonials, contact_card_only")
         .eq("agency_slug", agencySlug)
         .eq("slug", agentSlug)
         .eq("is_published", true)
@@ -21,6 +21,7 @@ export function useAgentProfile(agencySlug: string | undefined, agentSlug: strin
       if (!data) throw new Error("Agent not found");
 
       return {
+        contactCardOnly: data.contact_card_only === true,
         name: normalizeBrandText(data.name),
         firstName: normalizeBrandText(data.first_name),
         lastName: normalizeBrandText(data.last_name),

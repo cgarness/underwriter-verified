@@ -1,3 +1,16 @@
+## Safe rollout follow-up — 2026-10-18; isolated implementation approved
+Chris approved the scoped exclusion/contact-card plan at 16:58:56 UTC. This is branch implementation only, not a new production release approval.
+
+Implemented: private exact-UUID exclusions; receiver rejection of any consent-linked page before publication, withdrawal or duplicate acknowledgement; generated public contact_card_only flag without exposing owner UUIDs; ownerless contact-card rendering and neutral preview metadata; direct booking/legal-route refusal; server intake refusal before writes. New-page provisioning requires an opted-in contact; existing cards may remove every contact. The complete intake replacement preserves the live definition except the managed-page guard and row lock. Canonical A2P content/configuration is unchanged.
+
+Candidate migration: 20261018170007_agentflow_contact_cards.sql, SHA-256 19c6185a54afc28cbb9f25d0dee1da82e29716626f98f78e5a6f61cde31a0382. Not applied. No registry rows seeded, mappings, secrets, deployments, schedules or activation changed.
+
+Validation: 123 UV tests pass (including A2P and contact-card routes); root/app/node TypeScript pass; changed-TypeScript lint has zero errors and one inherited Fast Refresh warning; build passes. Paired local PGlite: 23 scenarios pass, including exclusions, consent-linked rejection, ownerless intake refusal and owned synthetic intake with both consent choices unchecked. AF focused tests: 98 pass; AF root TypeScript/build pass. Shared protocol/payload remain byte-identical. Native PostgreSQL/concurrency, complete Deno, desktop/mobile browser and Reports exact-base CI must pass on final paired heads before release; local native install is denied by container permissions, browser download is invalid/truncated, and Deno dependency host is unreachable. These are unverified checks, not passes.
+
+Next: final paired CI evidence, then separate exact migration/RLS/function approval (including #APPROVE_RLS_CHANGE), exclusion seed approval, frontend release approval, and a bounded synthetic pilot. Keep worker disabled and allow_provisioning=false. Before any production replacement re-read live function/migration preimages and advisors. Never alter consent sender mappings, disclosures, STOP records or the canonical CG Financial page. Rollback: retain mappings/versions/tombstones; leave exclusion guards in place and return UI to previous release if needed. No production rollback is currently necessary.
+
+Proposed repository invariant (not an AGENT_RULES edit): consent-linked pages are wholly excluded from profile sync; ownerless managed pages cannot accept intake. Earlier identity-warning-only behavior is superseded by rejection in this candidate.
+
 ## Remaining rollout plan — 2026-10-18; implementation approval requested
 Chris clarified that AgentFlow profile data is authoritative even when incomplete, and explicitly prohibited changes affecting A2P. Supersede the earlier request to reconcile his real licensing data: the canonical CG Financial page must instead remain outside synchronization. No real profile correction is needed to test this feature.
 
