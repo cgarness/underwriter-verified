@@ -20,6 +20,21 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
+      - name: Preserve exact credential-free source for paired verification
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, tarfile
+          from pathlib import Path
+          with tarfile.open(Path(os.environ['RUNNER_TEMP']) / 'uv-profile-source.tar.gz', 'w:gz') as archive:
+              for name in subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0'):
+                  if name and not any(p.startswith('.env') or p == '.git' for p in Path(name).parts) and Path(name).is_file():
+                      archive.add(name, arcname=name, recursive=False)
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: uv-profile-source-${{ github.sha }}
+          path: ${{ runner.temp }}/uv-profile-source.tar.gz
+          retention-days: 7
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22.16.0'
