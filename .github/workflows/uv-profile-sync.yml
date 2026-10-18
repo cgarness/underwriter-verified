@@ -1,0 +1,46 @@
+name: UV profile sync verification
+on:
+  push:
+    branches: ['codex/uv-profile-sync-20261017']
+  pull_request:
+    paths: ['src/**', 'server/**', 'api/**', 'supabase/**', 'package-lock.json', '.github/workflows/uv-profile-sync.yml']
+permissions:
+  contents: read
+concurrency:
+  group: uv-profile-sync-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  public-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VITE_SUPABASE_URL: http://127.0.0.1:54321
+      VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_synthetic_test_only
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Preserve exact credential-free source for paired verification
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, tarfile
+          from pathlib import Path
+          with tarfile.open(Path(os.environ['RUNNER_TEMP']) / 'uv-profile-source.tar.gz', 'w:gz') as archive:
+              for name in subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0'):
+                  if name and not any(p.startswith('.env') or p == '.git' for p in Path(name).parts) and Path(name).is_file():
+                      archive.add(name, arcname=name, recursive=False)
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: uv-profile-source-${{ github.sha }}
+          path: ${{ runner.temp }}/uv-profile-source.tar.gz
+          retention-days: 7
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.16.0'
+      - run: npm ci
+      - run: npx tsc --noEmit && npx tsc --noEmit -p tsconfig.app.json && npx tsc --noEmit -p tsconfig.node.json
+      - name: Lint changed TypeScript including Edge and shared modules
+        run: npx eslint api/agent-photo.ts api/profile-page.ts server/agentPreview.ts server/uvProfileVisibility.test.ts src/components/BrandContactBlock.tsx src/components/HeroSection.tsx src/contexts/AgentDataContext.tsx src/hooks/useAgentProfile.ts src/integrations/supabase/types.ts src/lib/agentProfileEditing.ts src/pages/Admin.tsx src/pages/Index.tsx src/pages/Search.tsx src/test/uvProfileProtocol.test.ts src/test/uvProfilePublic.test.tsx supabase/functions/_shared/uv-profile supabase/functions/agentflow-profile-sync
+      - run: npm test
+      - run: npm run build

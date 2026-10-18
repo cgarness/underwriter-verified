@@ -1,11 +1,11 @@
 import { GENERIC_OG_IMAGE, getPublicAgent } from "../server/agentPreview.js";
 
 function fallback(): Response {
-  return Response.redirect(GENERIC_OG_IMAGE, 302);
+  return new Response(null, { status: 302, headers: { Location: GENERIC_OG_IMAGE, "Cache-Control": "no-store" } });
 }
 
 const HEADER = {
-  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+  "Cache-Control": "no-store",
   "X-Content-Type-Options": "nosniff",
 };
 
@@ -43,7 +43,7 @@ export async function GET(request: Request): Promise<Response> {
     if (value.length < 2048 && /^https:\/\//i.test(value)) {
       const external = new URL(value);
       if (external.username === "" && external.password === "") {
-        return Response.redirect(external.href, 302);
+        return new Response(null, { status: 302, headers: { ...HEADER, Location: external.href } });
       }
     }
     return fallback();

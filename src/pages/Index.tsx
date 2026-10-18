@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
 import { useAgentProfile } from "@/hooks/useAgentProfile";
-import { useAgentData } from "@/contexts/AgentDataContext";
+import { PublicAgentDataProvider } from "@/contexts/AgentDataContext";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import TrustBar from "@/components/TrustBar";
 import Header from "@/components/Header";
@@ -19,7 +18,6 @@ import { Loader2 } from "lucide-react";
 export default function Index() {
   const { agencySlug, agentSlug } = useParams<{ agencySlug: string; agentSlug: string }>();
   const { data: agent, isLoading, error } = useAgentProfile(agencySlug, agentSlug);
-  const { updateData } = useAgentData();
   usePageTitle(
     isLoading
       ? "Loading profile"
@@ -27,11 +25,6 @@ export default function Index() {
         ? `${agent.name} | ${agent.agency || "Licensed Life Insurance Agent"}`
         : "Agent Not Found"
   );
-
-  // Populate context so all child components read from it
-  useEffect(() => {
-    if (agent) updateData(agent);
-  }, [agent]);
 
   if (isLoading) {
     return (
@@ -51,14 +44,15 @@ export default function Index() {
   }
 
   return (
+    <PublicAgentDataProvider key={`${agencySlug}/${agentSlug}`} data={agent}>
     <div className="min-h-screen">
       <TrustBar />
       <Header />
       <HeroSection />
       <CredentialsSection />
-      <AboutSection />
+      {agent.bio.trim() && <AboutSection />}
       <ServicesSection />
-      <TestimonialsSection />
+      {agent.testimonials.length > 0 && <TestimonialsSection />}
       <LeadCaptureSection
         agentName={agent.name}
         agencyName={agent.agency}
@@ -69,5 +63,6 @@ export default function Index() {
       <ContactSection />
       <Footer />
     </div>
+    </PublicAgentDataProvider>
   );
 }

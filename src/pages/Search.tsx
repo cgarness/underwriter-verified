@@ -35,6 +35,7 @@ export default function Search() {
     const { data, error } = await supabase
       .from("agents")
       .select("name, agency, slug, agency_slug, npn, state_licenses")
+      .eq("is_published", true)
       .or(
         `name.ilike.${pattern},agency.ilike.${pattern},slug.ilike.${pattern},phone.ilike.${pattern},email.ilike.${pattern},npn.ilike.${pattern}`
       );

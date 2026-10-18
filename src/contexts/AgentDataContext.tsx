@@ -65,7 +65,7 @@ export function AgentDataProvider({ children }: { children: ReactNode }) {
         }
         return { ...DEFAULT_DATA, ...parsed };
       }
-    } catch {}
+    } catch { /* Ignore malformed legacy editor preferences. Public routes never use this cache. */ }
     return DEFAULT_DATA;
   });
 
@@ -90,3 +90,9 @@ export function AgentDataProvider({ children }: { children: ReactNode }) {
 }
 
 export const useAgentData = () => useContext(AgentDataContext);
+
+/** Public routes receive the resolved agent synchronously, never another route's local cache. */
+export function PublicAgentDataProvider({ data, children }: { data: AgentData; children: ReactNode }) {
+  const value = useMemo(() => ({ data, updateData: () => {} }), [data]);
+  return <AgentDataContext.Provider value={value}>{children}</AgentDataContext.Provider>;
+}

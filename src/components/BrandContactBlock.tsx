@@ -8,12 +8,12 @@ export default function BrandContactBlock({ brand }: { brand: LegalBrand }) {
       {brand.addressLine1 ? <p>{brand.addressLine1}</p> : null}
       {brand.addressLine2 ? <p>{brand.addressLine2}</p> : null}
       {brand.phone ? <p className="mt-2">Phone: {brand.phone}</p> : null}
-      <p>
+      {brand.email && <p>
         Email:{" "}
         <a href={`mailto:${brand.email}`} className="underline underline-offset-2 hover:text-accent">
           {brand.email}
         </a>
-      </p>
+      </p>}
     </div>
   );
 }

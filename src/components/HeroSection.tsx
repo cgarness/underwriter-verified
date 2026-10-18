@@ -1,11 +1,11 @@
 import { Phone, Mail, MessageSquare, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAgentData } from "@/contexts/AgentDataContext";
-import agentPhotoDefault from "@/assets/agent-headshot.jpg";
 
 export default function HeroSection() {
   const { data } = useAgentData();
-  const photo = data.headshotUrl || agentPhotoDefault;
+  const photo = data.headshotUrl;
+  const initials = `${data.firstName.charAt(0)}${data.lastName.charAt(0)}`.toUpperCase();
 
   const formatPhone = (phone: string) => {
     const digits = phone.replace(/\D/g, "");
@@ -21,11 +21,11 @@ export default function HeroSection() {
       <div className="container flex flex-col items-center text-center">
         <div className="relative animate-reveal">
           <div className="absolute -inset-3 rounded-full bg-accent/20 blur-xl" />
-          <img
+          {photo ? <img
             src={photo}
-            alt={`${data.name} — Licensed Life Insurance Agent`}
+            alt={data.name}
             className="relative z-10 h-36 w-36 rounded-full object-cover shadow-lg ring-4 ring-background md:h-44 md:w-44"
-          />
+          /> : <div aria-label={`${data.name} profile initials`} className="relative z-10 flex h-36 w-36 items-center justify-center rounded-full bg-muted text-4xl font-semibold text-muted-foreground ring-4 ring-background md:h-44 md:w-44">{initials}</div>}
         </div>
 
         <h1
@@ -66,36 +66,36 @@ export default function HeroSection() {
           className="mt-7 flex flex-wrap justify-center gap-3 animate-reveal"
           style={{ animationDelay: "300ms" }}
         >
-          <Button variant="outline" size="lg" asChild>
+          {data.phone && <Button variant="outline" size="lg" asChild>
             <a href={`tel:${data.phone}`}>
               <Phone size={16} />
               Call
             </a>
-          </Button>
-          <Button variant="outline" size="lg" asChild>
+          </Button>}
+          {data.phone && <Button variant="outline" size="lg" asChild>
             <a href={`sms:${data.phone}`}>
               <MessageSquare size={16} />
               Text
             </a>
-          </Button>
-          <Button variant="outline" size="lg" asChild>
+          </Button>}
+          {data.email && <Button variant="outline" size="lg" asChild>
             <a href={`mailto:${data.email}`}>
               <Mail size={16} />
               Email
             </a>
-          </Button>
+          </Button>}
         </div>
 
         <div
           className="mt-4 flex flex-col items-center gap-1.5 text-sm text-muted-foreground animate-reveal"
           style={{ animationDelay: "400ms" }}
         >
-          <a href={`tel:${data.phone}`} className="transition-colors hover:text-foreground">
+          {data.phone && <a href={`tel:${data.phone}`} className="transition-colors hover:text-foreground">
             {formatPhone(data.phone)}
-          </a>
-          <a href={`mailto:${data.email}`} className="transition-colors hover:text-foreground">
+          </a>}
+          {data.email && <a href={`mailto:${data.email}`} className="transition-colors hover:text-foreground">
             {data.email}
-          </a>
+          </a>}
         </div>
       </div>
     </section>
