@@ -1,3 +1,16 @@
+## Exact follow-up backend approval package — 2026-10-18 22:24 UTC live review
+Target: UV jzdzeevjpootbeuniygx. Apply only 20261018170007_agentflow_contact_cards.sql, SHA-256 19c6185a54afc28cbb9f25d0dee1da82e29716626f98f78e5a6f61cde31a0382, through the migration API after explicit approval. The candidate is additive: private exclusion table with RLS enabled and every PUBLIC/anon/authenticated/service_role table privilege revoked; no policies granting access. Existing SECURITY DEFINER function EXECUTE ACLs are preserved by CREATE OR REPLACE. No Edge Function deployment or credential change is needed.
+
+Replace only apply_agentflow_profile_v1 and submit_public_intake; add the generated public contact_card_only boolean. Receiver remains service_role-only; intake remains anon/authenticated-callable but denies ownerless/withdrawn managed pages before writes. The intake preimage was freshly retrieved; replacement is byte-identical except the new guard and FOR SHARE lock. Deploy this schema before releasing the UV frontend that selects contact_card_only.
+
+Live baseline: AF sources/profiles=0, feature schedules=0; UV sources/links/nonces=0; neither exclusion table exists. Canonical UV agent e7c2f35a-e215-4e9e-9492-176a344384eb remains unmanaged, published and consent-linked, with row fingerprint 518f8a8b78ca758b2fc9de5895b544a0. AF protected identity ecf2bb91-0350-4542-85ec-14d914311e99 still belongs to a0000000-0000-0000-0000-000000000001. No production data was changed.
+
+Separate exclusion-seed approval: insert only that exact (organization_id, profile_id) pair into private.uv_profile_exclusions on AF and private.agentflow_profile_exclusions on UV, with ON CONFLICT DO NOTHING and readback. This blocks synchronization; it is not an existing-page mapping or enrollment. Never seed a source, enable provisioning, change the protected UV row, or activate a scheduler as part of this package.
+
+After approval: recheck unapplied migration history and hashes; apply this single migration, verify table RLS/revokes/generated expression/function ACLs, compare security advisors, and verify the protected row fingerprint remains unchanged. AF pre-existing advisor baseline: 29 RLS-without-policy INFO, 22 mutable-search-path WARN, 2 public-RLS-disabled ERROR, 3 public-extension WARN, 57 anon/122 authenticated security-definer WARN, 1 password-protection WARN. UV: 10 RLS-without-policy INFO, 1 public-extension WARN, 1 anon/2 authenticated security-definer WARN, 1 password-protection WARN. A new intentional private no-policy table may add one INFO; unrelated findings are not modified.
+
+Rollback position: worker remains off, no sources/enrollments/schedules exist, and no new page is published. Keep additive protection tables/guards and any approved exclusion seed; do not drop mappings, versions, consent or withdrawal records. Frontend rollback can retain this backward-compatible schema. Any function rollback requires its own reviewed exact preimage and must not remove A2P protection while activation is possible. Frontend merge/release and bounded synthetic pilot remain separate gates.
+
 ## Safe rollout follow-up — 2026-10-18; isolated implementation approved
 Chris approved the scoped exclusion/contact-card plan at 16:58:56 UTC. This is branch implementation only, not a new production release approval.
 
