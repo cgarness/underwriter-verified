@@ -1,5 +1,8 @@
 # AgentFlow profile synchronization — UV receiver
 
+## October 18 continuation: approved isolated corrections
+The handoff explicitly requests the validator and configuration corrections under the existing build approval. Before editing: paired shared payload.ts; src/test/uvProfileProtocol.test.ts; both existing uv-profile-sync.yml workflows (full changed-TypeScript lint, pinned peer); scoped plan/release/verification documents and newest-first WORK_LOG.md entries. Synthetic checks only. Production gates stay separate; unrelated releases remain untouched.
+
 2026-10-17. Chris approved the isolated two-repository code build. Production migration/RLS application, existing-profile ownership/link mapping, credentials, merge/deploy and activation remain separately controlled and are NOT authorized by this build.
 Base: 2501713d368aa1ad0cea6acc1792fb51f3cb1c8c. Paired AF base: e2ddef261e0288a058f8bf1eaa6f9c1ace8d7881. Branch: codex/uv-profile-sync-20261017.
 

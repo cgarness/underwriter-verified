@@ -3,12 +3,31 @@ import { describe, expect, it } from 'vitest';
 import { parseEnvelope, safePhoto } from '../../supabase/functions/_shared/uv-profile/payload';
 import { sign, verify, validAuthHeaders, readBoundedText } from '../../supabase/functions/_shared/uv-profile/protocol';
 const secret = 'test-only-profile-secret-'.repeat(3);
+const published = { published: true, first_name: 'Test', last_name: 'Agent', phone: '', email: '', agency: 'Synthetic', agency_slug: 'synthetic', npn: '', headshot_url: '', state_licenses: ['CA - #TEST'] };
 const env = { schema: 1, organization_id: '10000000-0000-4000-8000-000000000001', profile_id: '20000000-0000-4000-8000-000000000001', version: '1', profile: { published: false } };
 async function headers(body: string) {
  const timestamp = String(Math.floor(Date.now()/1000)); const nonce = crypto.randomUUID();
  return new Headers({ 'x-uv-timestamp': timestamp, 'x-uv-nonce': nonce, 'x-uv-signature': await sign(body, secret, timestamp, nonce) });
 }
 describe('UV profile signed public-data contract', () => {
+ it.each([...Array.from({length: 32}, (_, i) => i), 127])('rejects control code %i in public text and licenses', code => {
+  const control = String.fromCharCode(code);
+  for (const field of ['first_name', 'last_name', 'phone', 'email', 'agency', 'npn']) {
+   expect(() => parseEnvelope({...env, profile: {...published, [field]: 'A' + control + 'B'}})).toThrow('invalid_profile');
+  }
+  for (const license of ['CA - #A' + control + 'B', 'CA - #TEST' + control]) {
+   expect(() => parseEnvelope({...env, profile: {...published, state_licenses: [license]}})).toThrow('invalid_profile');
+  }
+ });
+ it('preserves non-control Unicode and license length boundaries', () => {
+  for (const value of [' ', '~', String.fromCharCode(128), 'é', '中', String.fromCharCode(8232)]) {
+   expect(() => parseEnvelope({...env, profile: {...published, first_name: 'A' + value + 'B', state_licenses: ['CA - #A' + value + 'B']}})).not.toThrow();
+  }
+  expect(() => parseEnvelope({...env, profile: {...published, state_licenses: ['CA - #' + 'A'.repeat(50)]}})).not.toThrow();
+  for (const license of ['CA - #', 'CA - #' + 'A'.repeat(51), 'ZZ - #TEST']) {
+   expect(() => parseEnvelope({...env, profile: {...published, state_licenses: [license]}})).toThrow('invalid_profile');
+  }
+ });
  it('accepts a minimal tombstone and no extra private fields', () => {
   expect(parseEnvelope(env)).toEqual(env);
   expect(() => parseEnvelope({...env, profile: {published: false, phone:'private'}})).toThrow();
