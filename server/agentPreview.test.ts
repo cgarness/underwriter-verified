@@ -4,15 +4,26 @@ import { buildProfileMetadata, escapeHTML, isProfileSlug } from "./agentPreview"
 const shell = '<!doctype html><html><head><meta name="description" content="Generic"><meta property="og:title" content="Underwriter Verified"><meta property="og:image" content="generic.png"><meta name="twitter:card" content="summary_large_image"><title>Underwriter Verified</title></head><body><div id="root"></div><script type="module" src="/assets/index.js"></script></body></html>';
 
 describe("agent SMS link preview metadata", () => {
-  it("uses neutral contact-card metadata without verification claims", () => {
+  it.each([undefined, false])("uses neutral unverified contact-card metadata: %s", (profile_verified) => {
     const html = buildProfileMetadata(shell,
-      { name: "Jordan Example", agency: "Example Life", headshot_url: "", contact_card_only: true },
+      { name: "Jordan Example", agency: "Example Life", headshot_url: "", contact_card_only: true, profile_verified },
       "https://www.underwriterverified.com/example-life/jordan", "https://www.underwriterverified.com/photo.png");
     expect(html).toContain("Jordan Example | Agent Profile");
     expect(html).toContain("Agent profile · Example Life");
     expect(html).not.toContain("✅");
     expect(html).not.toContain("Agent Verified");
     expect(html).toContain('property="og:image"');
+  });
+  it("uses the confirmed agent title across SMS and social previews", () => {
+    const html = buildProfileMetadata(shell,
+      { name: "Jordan Example", agency: "Example Life", headshot_url: "", contact_card_only: true, profile_verified: true },
+      "https://www.underwriterverified.com/example-life/jordan", "https://www.underwriterverified.com/photo.png");
+    expect(html).toContain('<title>Jordan Example | ✅ Agent Verified</title>');
+    expect(html).toContain('property="og:title" content="Jordan Example | ✅ Agent Verified"');
+    expect(html).toContain('name="twitter:title" content="Jordan Example | ✅ Agent Verified"');
+    expect(html).toContain('property="og:description" content="✅ Agent Verified · Example Life · Underwriter Verified"');
+    expect(html).toContain('property="og:image" content="https://www.underwriterverified.com/photo.png"');
+    expect(html).not.toContain('Jordan Example | Agent Profile');
   });
   it("renders a unique title, agency, green checkmark and agent photo URL", () => {
     const html = buildProfileMetadata(

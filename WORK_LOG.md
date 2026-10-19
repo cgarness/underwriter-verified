@@ -1,3 +1,11 @@
+## 2026-10-19 — Verified status in shared-link previews
+
+Chris confirmed the wizard works and requested the SMS preview match the screenshot: agent photo plus `Name | ✅ Agent Verified`. The server-side public preview lookup now reads the existing server-owned profile_verified field and applies it to managed-page document, Open Graph and Twitter titles/descriptions. Unverified managed pages remain neutral; legacy owner metadata and photos/canonical links retain their existing behavior. This is a server-rendered metadata-only follow-up with no database, Edge, A2P or AgentFlow button changes. Button alternatives are being presented for selection.
+
+Local validation: 12 metadata/visibility tests pass, including missing/false/nonboolean verification, confirmed titles and unchanged legacy behavior; node TypeScript, changed-file ESLint and diff whitespace checks pass. Exact-head CI and production metadata checks are recorded on the PR. Messaging apps can retain previously generated cards after the server metadata changes.
+
+---
+
 ## 2026-10-19 — UV profile verification wizard (prepared; NOT live)
 
 Chris requested an expiration-free profile confirmation wizard, optional bio, green completion badges and new buttons at 20:19 PDT October 18. Scoped implementation is on `codex/uv-verification-wizard-20261019`; production migration/Edge/frontend release remains gated.
