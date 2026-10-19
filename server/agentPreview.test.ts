@@ -4,6 +4,16 @@ import { buildProfileMetadata, escapeHTML, isProfileSlug } from "./agentPreview"
 const shell = '<!doctype html><html><head><meta name="description" content="Generic"><meta property="og:title" content="Underwriter Verified"><meta property="og:image" content="generic.png"><meta name="twitter:card" content="summary_large_image"><title>Underwriter Verified</title></head><body><div id="root"></div><script type="module" src="/assets/index.js"></script></body></html>';
 
 describe("agent SMS link preview metadata", () => {
+  it("uses neutral contact-card metadata without verification claims", () => {
+    const html = buildProfileMetadata(shell,
+      { name: "Jordan Example", agency: "Example Life", headshot_url: "", contact_card_only: true },
+      "https://www.underwriterverified.com/example-life/jordan", "https://www.underwriterverified.com/photo.png");
+    expect(html).toContain("Jordan Example | Agent Profile");
+    expect(html).toContain("Agent profile · Example Life");
+    expect(html).not.toContain("✅");
+    expect(html).not.toContain("Agent Verified");
+    expect(html).toContain('property="og:image"');
+  });
   it("renders a unique title, agency, green checkmark and agent photo URL", () => {
     const html = buildProfileMetadata(
       shell,

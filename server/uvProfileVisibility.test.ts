@@ -7,7 +7,7 @@ describe('public metadata scope',()=>{
   expect(await getPublicAgent('example-life','jordan-example')).toBeNull();
   const url=new URL(fetcher.mock.calls[0][0]);
   expect(url.searchParams.get('is_published')).toBe('eq.true');
-  expect(url.searchParams.get('select')).toBe('name,agency,headshot_url,updated_at');
+  expect(url.searchParams.get('select')).toBe('name,agency,headshot_url,updated_at,contact_card_only');
   expect(url.searchParams.get('agency_slug')).toBe('eq.example-life');
   expect(url.searchParams.get('slug')).toBe('eq.jordan-example');
  });

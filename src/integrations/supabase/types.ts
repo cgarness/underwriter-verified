@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           is_published: boolean
           managed_by_agentflow: boolean
+          contact_card_only: boolean
           agency: string
           agency_slug: string
           bio: string

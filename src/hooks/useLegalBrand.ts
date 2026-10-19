@@ -35,6 +35,6 @@ export function useLegalBrand() {
     scoped,
     profileHref: scoped ? `/${agencySlug}/${agentSlug}` : "/",
     isLoading: scoped && query.isLoading,
-    notFound: scoped && !query.isLoading && (query.isError || !query.data),
+    notFound: scoped && !query.isLoading && (query.isError || !query.data || query.data.contactCardOnly === true),
   };
 }

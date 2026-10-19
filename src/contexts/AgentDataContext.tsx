@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useCallback, useMemo } from "react";
 
 export interface AgentData {
+  contactCardOnly?: boolean;
   name: string;
   firstName: string;
   lastName: string;
