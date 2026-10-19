@@ -40,6 +40,14 @@ describe('ownerless managed public pages', () => {
   expect(screen.queryByText('Messaging Program')).not.toBeInTheDocument();
   expect(document.querySelector('a[href$="/bookcall"],a[href$="/privacy-policy"],a[href$="/terms-and-conditions"]')).toBeNull();
  });
+ it('shows the confirmed profile badge and optional bio without enabling intake', () => {
+  profile.data={...agent,profileVerified:true,bio:'Helping families with clear guidance.'};
+  page('/example-life/jordan');
+  expect(screen.getByLabelText('Verified agent')).toHaveAttribute('title','Profile details confirmed by this agent');
+  expect(screen.getByText('Helping families with clear guidance.')).toBeInTheDocument();
+  expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+  expect(screen.queryByRole('link',{name:'Text'})).not.toBeInTheDocument();
+ });
  it('reflects removed license/contact and updated photo without defaults', () => {
   profile.data = {...agent,phone:'',email:'new@example.invalid',stateLicenses:[],npn:'',headshotUrl:'https://example.invalid/photo.png'};
   page('/example-life/jordan');

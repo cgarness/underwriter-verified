@@ -1,3 +1,15 @@
+## 2026-10-19 — UV profile verification wizard (prepared; NOT live)
+
+Chris requested an expiration-free profile confirmation wizard, optional bio, green completion badges and new buttons at 20:19 PDT October 18. Scoped implementation is on `codex/uv-verification-wizard-20261019`; production migration/Edge/frontend release remains gated.
+
+AF now prefills a three-step Settings wizard, validates photo/full name/phone/email/NPN/canonical numbered state license, atomically saves confirmation and bio, and shows success only after the matching published acknowledgment. Profile navigation uses dark slate and outlined copy actions with emerald status. Missing required fields remove the derived badge on subsequent saved changes. Dates remain stored but do not gate profile confirmation or schedule expiry work. Badge means agent-confirmed profile completeness, not independent license verification. Account/tenant changes fail closed; optimistic snapshots reject stale overwrites. Existing status RPC stays compatible for old clients.
+
+UV accepts optional signed bio/profile_verified fields, displays the explicit server-owned managed badge, and protects managed bio/verification from client writes. Managed pages retain contact-only capabilities. Protected CG Financial/A2P identity, intake, consent, ownership, source activation, RLS, messaging and dialer are unchanged.
+
+Initial validation: AF 120 focused frontend tests; UV 125 full-suite tests; 25 paired SQL/real-handler scenarios and 10 new wizard SQL scenarios on isolated PGlite; builds pass. Exact-head native/browser CI remains required before release. See `docs/plans/2026-10-19-uv-verification/implementation_plan.md` and `release.md`. No production writes or secrets accessed.
+
+---
+
 ## 2026-10-19 — Shared UV public profile presentation
 
 Chris requested matching public profile layouts after the test agent rendered as a minimal card. Both managed and existing profiles now compose the same AgentProfileLayout: shared header, centered hero/photo, credentials, services, contact and footer. Managed pages use only their resolved identity and opted-in contact methods, neutral profile labels and direct contact actions. Missing biography/reviews remain absent. Existing CG Financial booking, quote forms, SMS disclosures, legal routes and legacy verification presentation retain their existing branch; no database, functions, settings, credentials or A2P data changed. contact_card_only remains a capability guard rather than a separate visual template.

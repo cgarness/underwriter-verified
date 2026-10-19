@@ -2,6 +2,7 @@ import { createContext, useContext, useState, ReactNode, useCallback, useMemo } 
 
 export interface AgentData {
   contactCardOnly?: boolean;
+  profileVerified?: boolean;
   name: string;
   firstName: string;
   lastName: string;
