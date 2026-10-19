@@ -9,6 +9,7 @@ const PUBLISHABLE_KEY = "sb_publishable_uPzrTCO-73285tblDxclUQ_2s9shmhF";
 
 export interface PreviewAgent {
   contact_card_only?: boolean;
+  profile_verified?: boolean;
   name: string;
   agency: string;
   headshot_url: string;
@@ -26,7 +27,7 @@ export async function getPublicAgent(
   if (!isProfileSlug(agency) || !isProfileSlug(agent)) return null;
 
   const params = new URLSearchParams({
-    select: "name,agency,headshot_url,updated_at,contact_card_only",
+    select: "name,agency,headshot_url,updated_at,contact_card_only,profile_verified",
     is_published: "eq.true",
     agency_slug: "eq." + agency,
     slug: "eq." + agent,
@@ -50,6 +51,7 @@ export async function getPublicAgent(
   if (!row || typeof row.name !== "string" || !row.name.trim()) return null;
   return {
     contact_card_only: row.contact_card_only === true,
+    profile_verified: row.profile_verified === true,
     name: row.name.replace(/\s+/g, " ").slice(0, 120).trim(),
     agency: typeof row.agency === "string" ? row.agency.replace(/\s+/g, " ").slice(0, 120).trim() : "",
     headshot_url: typeof row.headshot_url === "string" ? row.headshot_url : "",
@@ -74,8 +76,11 @@ export function buildProfileMetadata(
 ): string {
   const name = escapeHTML(agent.name);
   const agency = escapeHTML(agent.agency || (agent.contact_card_only ? "Agent profile" : "Licensed Life Insurance Agent"));
-  const title = name + (agent.contact_card_only ? " | Agent Profile" : " | ✅ Agent Verified");
-  const description = (agent.contact_card_only ? "Agent profile · " : "✅ Agent Verified · ") + agency + " · Underwriter Verified";
+  // Managed pages use the same confirmed status as their visible profile badge.
+  // Preserve the existing presentation for legacy, non-managed owner pages.
+  const verified = !agent.contact_card_only || agent.profile_verified === true;
+  const title = name + (verified ? " | ✅ Agent Verified" : " | Agent Profile");
+  const description = (verified ? "✅ Agent Verified · " : "Agent profile · ") + agency + " · Underwriter Verified";
   const canonical = escapeHTML(absoluteUrl);
   const versionedPhoto = new URL(photoUrl);
   if (agent.updated_at) versionedPhoto.searchParams.set("v", agent.updated_at);
