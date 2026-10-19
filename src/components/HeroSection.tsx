@@ -4,6 +4,7 @@ import { useAgentData } from "@/contexts/AgentDataContext";
 
 export default function HeroSection() {
   const { data } = useAgentData();
+  const verified = !data.contactCardOnly || data.profileVerified === true;
   const photo = data.headshotUrl;
   const initials = `${data.firstName.charAt(0)}${data.lastName.charAt(0)}`.toUpperCase();
 
@@ -38,11 +39,12 @@ export default function HeroSection() {
         <div
           className="mt-2 flex items-center gap-1.5 animate-reveal"
           style={{ animationDelay: "125ms" }}
-          aria-label={data.contactCardOnly ? "Agent profile" : "Verified agent"}
+          title={data.contactCardOnly && verified ? "Profile details confirmed by this agent" : undefined}
+          aria-label={!verified ? "Agent profile" : "Verified agent"}
         >
-          {data.contactCardOnly ? <UserRound size={18} className="text-accent" aria-hidden="true" /> : <BadgeCheck size={18} className="text-emerald-600" aria-hidden="true" />}
-          <span className={`text-sm font-semibold tracking-wide ${data.contactCardOnly ? "text-muted-foreground" : "text-emerald-700"}`}>
-            {data.contactCardOnly ? "Agent Profile" : "Verified"}
+          {!verified ? <UserRound size={18} className="text-accent" aria-hidden="true" /> : <BadgeCheck size={18} className="text-emerald-600" aria-hidden="true" />}
+          <span className={`text-sm font-semibold tracking-wide ${!verified ? "text-muted-foreground" : "text-emerald-700"}`}>
+            {!verified ? "Agent Profile" : "Verified"}
           </span>
         </div>
 

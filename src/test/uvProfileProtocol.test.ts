@@ -28,6 +28,13 @@ describe('UV profile signed public-data contract', () => {
    expect(() => parseEnvelope({...env, profile: {...published, state_licenses: [license]}})).toThrow('invalid_profile');
   }
  });
+ it('accepts the optional profile confirmation and bio without weakening old payloads', () => {
+  const profile={...published,headshot_url:'https://images.example.com/photo.png',npn:'123',profile_verified:true,bio:'Line one\nLine two'};
+  expect(parseEnvelope({...env,profile}).profile).toEqual(profile);
+  for(const missing of [{headshot_url:''},{npn:''},{state_licenses:[]}]) expect(()=>parseEnvelope({...env,profile:{...profile,...missing}})).toThrow();
+  expect(()=>parseEnvelope({...env,profile:{...profile,bio:'x'.repeat(2001)}})).toThrow();
+  expect(()=>parseEnvelope({...env,profile:{...profile,profile_verified:'true'}})).toThrow();
+ });
  it('accepts a minimal tombstone and no extra private fields', () => {
   expect(parseEnvelope(env)).toEqual(env);
   expect(() => parseEnvelope({...env, profile: {published: false, phone:'private'}})).toThrow();
