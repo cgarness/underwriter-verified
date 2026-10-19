@@ -3,12 +3,15 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useAgentData } from "@/contexts/AgentDataContext";
+import DirectContactSection from "./DirectContactSection";
 
 export default function ContactSection() {
   const ref = useScrollReveal();
   const { data } = useAgentData();
   const { agencySlug, agentSlug } = useParams<{ agencySlug: string; agentSlug: string }>();
   const bookPath = agencySlug && agentSlug ? `/${agencySlug}/${agentSlug}/bookcall` : null;
+
+  if (data.contactCardOnly) return <DirectContactSection />;
 
   return (
     <section id="contact" className="py-20 md:py-28">
