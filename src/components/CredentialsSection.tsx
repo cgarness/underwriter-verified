@@ -14,8 +14,8 @@ export default function CredentialsSection() {
         </h2>
         <div className="mx-auto mt-3 h-1 w-12 rounded-full bg-accent" />
         <p className="mx-auto mt-4 max-w-lg text-center text-muted-foreground">
-          I am a fully licensed and regulated insurance professional, committed
-          to the highest standards of transparency and service.
+          {data.contactCardOnly ? "Producer information and state licenses provided by this agent." :
+            "I am a fully licensed and regulated insurance professional, committed to the highest standards of transparency and service."}
         </p>
 
         <div className="mx-auto mt-10 flex flex-col items-center gap-1">
@@ -24,7 +24,7 @@ export default function CredentialsSection() {
             National Producer Number
           </p>
           <p className="text-3xl font-bold tabular-nums text-foreground">
-            {data.npn}
+            {data.npn || "—"}
           </p>
         </div>
 

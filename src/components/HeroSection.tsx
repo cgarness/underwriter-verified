@@ -1,4 +1,4 @@
-import { Phone, Mail, MessageSquare, BadgeCheck } from "lucide-react";
+import { Phone, Mail, MessageSquare, BadgeCheck, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAgentData } from "@/contexts/AgentDataContext";
 
@@ -38,11 +38,11 @@ export default function HeroSection() {
         <div
           className="mt-2 flex items-center gap-1.5 animate-reveal"
           style={{ animationDelay: "125ms" }}
-          aria-label="Verified agent"
+          aria-label={data.contactCardOnly ? "Agent profile" : "Verified agent"}
         >
-          <BadgeCheck size={18} className="text-emerald-600" aria-hidden="true" />
-          <span className="text-sm font-semibold tracking-wide text-emerald-700">
-            Verified
+          {data.contactCardOnly ? <UserRound size={18} className="text-accent" aria-hidden="true" /> : <BadgeCheck size={18} className="text-emerald-600" aria-hidden="true" />}
+          <span className={`text-sm font-semibold tracking-wide ${data.contactCardOnly ? "text-muted-foreground" : "text-emerald-700"}`}>
+            {data.contactCardOnly ? "Agent Profile" : "Verified"}
           </span>
         </div>
 
@@ -72,7 +72,7 @@ export default function HeroSection() {
               Call
             </a>
           </Button>}
-          {data.phone && <Button variant="outline" size="lg" asChild>
+          {!data.contactCardOnly && data.phone && <Button variant="outline" size="lg" asChild>
             <a href={`sms:${data.phone}`}>
               <MessageSquare size={16} />
               Text

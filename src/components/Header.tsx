@@ -16,7 +16,13 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { data } = useAgentData();
   const { agencySlug, agentSlug } = useParams<{ agencySlug: string; agentSlug: string }>();
-  const bookUrl = agencySlug && agentSlug ? `/${agencySlug}/${agentSlug}/bookcall` : "#contact";
+  const bookUrl = !data.contactCardOnly && agencySlug && agentSlug ? `/${agencySlug}/${agentSlug}/bookcall` : "#contact";
+  const links = data.contactCardOnly ? navLinks.filter(link =>
+    (link.href !== "#about" || !!data.bio.trim()) &&
+    (link.href !== "#reviews" || data.testimonials.length > 0) &&
+    (link.href !== "#contact" || !!(data.phone || data.email))) : navLinks;
+  const contactLabel = data.contactCardOnly ? "Contact" : "Book a Call";
+  const showContact = !data.contactCardOnly || !!(data.phone || data.email);
   const nameParts = data.name.split(" ");
   const firstName = nameParts[0] || "";
   const rest = nameParts.slice(1).join(" ");
@@ -29,7 +35,7 @@ export default function Header() {
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {navLinks.map((l) => (
+          {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
@@ -41,9 +47,9 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button variant="hero" size="default" className="hidden md:inline-flex" asChild>
-            <a href={bookUrl}>Book a Call</a>
-          </Button>
+          {showContact && <Button variant="hero" size="default" className="hidden md:inline-flex" asChild>
+            <a href={bookUrl}>{contactLabel}</a>
+          </Button>}
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -58,7 +64,7 @@ export default function Header() {
       {mobileOpen && (
         <div className="border-t border-border bg-background px-6 pb-6 pt-4 md:hidden">
           <nav className="flex flex-col gap-4">
-            {navLinks.map((l) => (
+            {links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
@@ -68,11 +74,11 @@ export default function Header() {
                 {l.label}
               </a>
             ))}
-            <Button variant="hero" size="lg" className="mt-2 w-full" asChild>
+            {showContact && <Button variant="hero" size="lg" className="mt-2 w-full" asChild>
               <a href={bookUrl} onClick={() => setMobileOpen(false)}>
-                Book a Call
+                {contactLabel}
               </a>
-            </Button>
+            </Button>}
           </nav>
         </div>
       )}

@@ -20,7 +20,7 @@ function page(path: string) {
 }
 beforeEach(() => { profile.data = {...agent}; });
 describe('ownerless managed public pages', () => {
- it('renders only profile facts and opted-in contact links', () => {
+ it('uses the shared UV layout with profile facts and opted-in contact links', () => {
   page('/example-life/jordan');
   expect(screen.getByRole('heading',{name:agent.name})).toBeInTheDocument();
   expect(screen.getByRole('link',{name:'Call'})).toHaveAttribute('href','tel:+15555550123');
@@ -30,6 +30,15 @@ describe('ownerless managed public pages', () => {
   expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
   expect(screen.queryByText(/Agent Verified|book a call/i)).not.toBeInTheDocument();
   expect(document.title).toContain('Agent Profile');
+  expect(screen.getByRole('banner')).toBeInTheDocument();
+  expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+  expect(screen.getByRole('heading',{name:'Licenses & Credentials'})).toBeInTheDocument();
+  expect(screen.getByRole('heading',{name:'How I Can Help You'})).toBeInTheDocument();
+  expect(screen.getByRole('heading',{name:"Let's Build Your Plan"})).toBeInTheDocument();
+  expect(screen.queryByLabelText('Verified agent')).not.toBeInTheDocument();
+  expect(screen.queryByText(/fully licensed and regulated/)).not.toBeInTheDocument();
+  expect(screen.queryByText('Messaging Program')).not.toBeInTheDocument();
+  expect(document.querySelector('a[href$="/bookcall"],a[href$="/privacy-policy"],a[href$="/terms-and-conditions"]')).toBeNull();
  });
  it('reflects removed license/contact and updated photo without defaults', () => {
   profile.data = {...agent,phone:'',email:'new@example.invalid',stateLicenses:[],npn:'',headshotUrl:'https://example.invalid/photo.png'};

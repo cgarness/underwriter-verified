@@ -1,3 +1,9 @@
+## 2026-10-19 — Shared UV public profile presentation
+
+Chris requested matching public profile layouts after the test agent rendered as a minimal card. Both managed and existing profiles now compose the same AgentProfileLayout: shared header, centered hero/photo, credentials, services, contact and footer. Managed pages use only their resolved identity and opted-in contact methods, neutral profile labels and direct contact actions. Missing biography/reviews remain absent. Existing CG Financial booking, quote forms, SMS disclosures, legal routes and legacy verification presentation retain their existing branch; no database, functions, settings, credentials or A2P data changed. contact_card_only remains a capability guard rather than a separate visual template.
+
+Validation: all 123 UV tests pass, including A2P consent/form tests, managed route refusal and new shared-layout assertions. Root/app/node TypeScript, changed-file lint and production build pass. Paired desktop/mobile browser verification and canonical release checks will be recorded on the release PR. Scoped plan: docs/plans/2026-10-19-uv-presentation/implementation_plan.md.
+
 ## 2026-10-19 00:13 UTC — AF backend guards applied and verified; synchronization OFF
 
 Chris explicitly approved `APPROVE_RLS_CHANGE — AF backend guards` at 17:12 PDT on October 18. Applied only AF project `jncvvsvckxhqgqvkppmj` source `supabase/migrations/20261018170007_uv_profile_exclusions.sql`, SHA-256 `b3ce50dd666064acaf0ccfae43dbef9491b47ef9ace7bee40143c380fe562108`, reviewed at PR #460 head `ee539da635db13043e08718462f84cd504408ab2`. Hosted version: **`20261019001339_uv_profile_exclusions`**. Stored migration SQL is byte-identical. Do not replay, rename or edit the applied file.
