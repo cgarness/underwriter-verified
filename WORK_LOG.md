@@ -1,3 +1,9 @@
+## 2026-10-20 — Personal agency display branding
+
+Chris requested independent agency branding for individual agents. Optional Agency / Brand Name is saved per agent in the UV setup flow, with blank restoring the registered agency name. Existing agency membership, shared names, slugs/URLs, credentials, permissions, A2P and protected/consent-linked profiles stay unchanged. The sender uses the personal name as display text; the receiver still requires the registered organization and exact agency slug. Old clients preserve saved branding when omitting the optional field.
+
+Validation: 44 focused frontend tests; 11 isolated real-migration SQL scenarios; 25 paired SQL/signed-handler scenarios passed on PGlite. Root TypeScript and scoped lint pass. Production/CI evidence is recorded on the paired PRs; this entry alone is not deployment evidence. No RLS or Edge Function changes. Plan: docs/plans/2026-10-20-uv-personal-brand/implementation_plan.md.
+
 ## 2026-10-19 — Verified status in shared-link previews
 
 Chris confirmed the wizard works and requested the SMS preview match the screenshot: agent photo plus `Name | ✅ Agent Verified`. The server-side public preview lookup now reads the existing server-owned profile_verified field and applies it to managed-page document, Open Graph and Twitter titles/descriptions. Unverified managed pages remain neutral; legacy owner metadata and photos/canonical links retain their existing behavior. This is a server-rendered metadata-only follow-up with no database, Edge, A2P or AgentFlow button changes. Button alternatives are being presented for selection.
