@@ -31,7 +31,7 @@ async function hashFingerprint(agentId: string, ip: string, secret: string): Pro
 Deno.serve(async (request: Request) => {
   const origin = request.headers.get("origin") ?? "";
   const corsOrigin = allowedOrigin(origin) ? origin : "https://www.underwriterverified.com";
-  if (request.method === "OPTIONS") return response({}, allowedOrigin(origin) ? 204 : 403, corsOrigin);
+  if (request.method === "OPTIONS") return response({}, allowedOrigin(origin) ? 200 : 403, corsOrigin);
   if (request.method !== "POST") return response({ error: "method_not_allowed" }, 405, corsOrigin);
   if (!allowedOrigin(origin)) return response({ error: "origin_unavailable" }, 403, corsOrigin);
 

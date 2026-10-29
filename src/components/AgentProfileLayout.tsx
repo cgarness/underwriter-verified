@@ -25,7 +25,7 @@ export default function AgentProfileLayout() {
       <CredentialsSection />
       {agent.bio.trim() && <AboutSection />}
       <ServicesSection />
-      <AgentReviewsSection />
+      {agent.id && <AgentReviewsSection />}
       {agent.testimonials.length > 0 && <TestimonialsSection />}
       {!agent.contactCardOnly && <LeadCaptureSection
         agentName={agent.name}

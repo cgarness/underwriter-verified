@@ -49,7 +49,7 @@ export default function HeroSection() {
           </span>
         </div>
 
-        <AgentReviewSummary />
+        {data.id && <AgentReviewSummary />}
 
         {data.agency && (
           <p
