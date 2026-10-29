@@ -54,7 +54,7 @@ REVOKE ALL ON private.agent_review_limits FROM PUBLIC,anon,authenticated,service
 -- concurrent submissions and races around the per-agent daily limit.
 CREATE FUNCTION public.record_agent_review_v1(
   p_agent_id uuid,
-  p_rating smallint,
+  p_rating integer,
   p_comment text,
   p_fingerprint text,
   p_request_id uuid
@@ -95,7 +95,7 @@ BEGIN
   RETURN new_id;
 END;
 $$;
-REVOKE ALL ON FUNCTION public.record_agent_review_v1(uuid,smallint,text,text,uuid)
+REVOKE ALL ON FUNCTION public.record_agent_review_v1(uuid,integer,text,text,uuid)
   FROM PUBLIC,anon,authenticated;
-GRANT EXECUTE ON FUNCTION public.record_agent_review_v1(uuid,smallint,text,text,uuid)
+GRANT EXECUTE ON FUNCTION public.record_agent_review_v1(uuid,integer,text,text,uuid)
   TO service_role;

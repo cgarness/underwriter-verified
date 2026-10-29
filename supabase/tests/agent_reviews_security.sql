@@ -31,9 +31,9 @@ BEGIN
  THEN RAISE EXCEPTION 'public review write privilege leaked'; END IF;
  IF has_column_privilege('anon','public.agent_reviews','request_id','SELECT')
  THEN RAISE EXCEPTION 'request identifier exposed'; END IF;
- IF has_function_privilege('anon','public.record_agent_review_v1(uuid,smallint,text,text,uuid)','EXECUTE')
-  OR has_function_privilege('authenticated','public.record_agent_review_v1(uuid,smallint,text,text,uuid)','EXECUTE')
-  OR NOT has_function_privilege('service_role','public.record_agent_review_v1(uuid,smallint,text,text,uuid)','EXECUTE')
+ IF has_function_privilege('anon','public.record_agent_review_v1(uuid,integer,text,text,uuid)','EXECUTE')
+  OR has_function_privilege('authenticated','public.record_agent_review_v1(uuid,integer,text,text,uuid)','EXECUTE')
+  OR NOT has_function_privilege('service_role','public.record_agent_review_v1(uuid,integer,text,text,uuid)','EXECUTE')
  THEN RAISE EXCEPTION 'review RPC permission violation'; END IF;
  IF has_table_privilege('anon','private.agent_review_limits','SELECT')
  THEN RAISE EXCEPTION 'private fingerprints exposed'; END IF;
