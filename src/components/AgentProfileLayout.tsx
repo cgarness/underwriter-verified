@@ -7,6 +7,7 @@ import CredentialsSection from "@/components/CredentialsSection";
 import AboutSection from "@/components/AboutSection";
 import ServicesSection from "@/components/ServicesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import AgentReviewsSection from "@/components/AgentReviewsSection";
 import LeadCaptureSection from "@/components/LeadCaptureSection";
 import LegalSection from "@/components/LegalSection";
 import ContactSection from "@/components/ContactSection";
@@ -24,6 +25,7 @@ export default function AgentProfileLayout() {
       <CredentialsSection />
       {agent.bio.trim() && <AboutSection />}
       <ServicesSection />
+      {agent.id && <AgentReviewsSection />}
       {agent.testimonials.length > 0 && <TestimonialsSection />}
       {!agent.contactCardOnly && <LeadCaptureSection
         agentName={agent.name}

@@ -1,3 +1,7 @@
+## 2026-10-28 — Client star ratings and optional public reviews (development only)
+
+Prepared a separate, gated Underwriter Verified feature: public 1–5-star ratings beneath the profile badge, optional anonymous client comments and an agent-owned read-only review list. Star averages count only user-submitted published reviews, never AI/sample or agent-entered testimonials. Server-only Edge + RLS/ACL migration protects anonymous writes, limits repeats and preserves low-rating submissions; no agent edit/delete rights. Production DB, Edge and frontend release remain unapproved. No A2P or AgentFlow resource changed. See docs/plans/2026-10-28-agent-reviews/implementation_plan.md.
+
 ## 2026-10-20 — Personal agency display branding
 
 Chris requested independent agency branding for individual agents. Optional Agency / Brand Name is saved per agent in the UV setup flow, with blank restoring the registered agency name. Existing agency membership, shared names, slugs/URLs, credentials, permissions, A2P and protected/consent-linked profiles stay unchanged. The sender uses the personal name as display text; the receiver still requires the registered organization and exact agency slug. Old clients preserve saved branding when omitting the optional field.

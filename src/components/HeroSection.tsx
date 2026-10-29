@@ -1,6 +1,7 @@
 import { Phone, Mail, MessageSquare, BadgeCheck, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAgentData } from "@/contexts/AgentDataContext";
+import AgentReviewSummary from "@/components/AgentReviewSummary";
 
 export default function HeroSection() {
   const { data } = useAgentData();
@@ -47,6 +48,8 @@ export default function HeroSection() {
             {!verified ? "Agent Profile" : "Verified"}
           </span>
         </div>
+
+        {data.id && <AgentReviewSummary />}
 
         {data.agency && (
           <p
