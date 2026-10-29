@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { websiteOwnedFields } from "@/lib/agentProfileEditing";
 import IntakeRequestsPanel from "@/components/IntakeRequestsPanel";
+import AgentReviewsAdminPanel from "@/components/AgentReviewsAdminPanel";
 
 const US_STATES = [
   "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
@@ -310,6 +311,7 @@ export default function Admin() {
       ) : (
         <div className="container max-w-2xl py-10 space-y-10">
           <IntakeRequestsPanel />
+          {agentId && <AgentReviewsAdminPanel agentId={agentId} />}
           {managedByAgentFlow && <p className="text-sm text-muted-foreground">Profile details are managed in AgentFlow.</p>}
           {/* Personal Info */}
           <Section title="Personal Information">

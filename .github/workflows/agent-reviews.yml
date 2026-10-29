@@ -1,0 +1,29 @@
+name: Agent client reviews checks
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "supabase/functions/submit-agent-review/**"
+      - "supabase/migrations/*agent_client_reviews*"
+      - ".github/workflows/agent-reviews.yml"
+permissions:
+  contents: read
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VITE_SUPABASE_URL: http://127.0.0.1:54321
+      VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_synthetic_test_only
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "22.16.0"
+      - run: npm ci
+      - run: npx tsc --noEmit && npx tsc --noEmit -p tsconfig.app.json && npx tsc --noEmit -p tsconfig.node.json
+      - run: npx eslint src/components/AgentReviewSummary.tsx src/components/AgentReviewsSection.tsx src/components/AgentReviewsAdminPanel.tsx src/hooks/useAgentReviews.ts src/lib/agentReviews.ts src/test/agentReviews.test.tsx
+      - run: npm test
+      - run: npm run build

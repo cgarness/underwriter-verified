@@ -11,3 +11,7 @@ verify_jwt = false
 # Dedicated server-to-server authentication in the handler; never public access.
 [functions.agentflow-profile-sync]
 verify_jwt = false
+
+# Anonymous customer submissions; validated, throttled and written server-side.
+[functions.submit-agent-review]
+verify_jwt = false

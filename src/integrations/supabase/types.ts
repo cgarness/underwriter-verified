@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_reviews: {
+        Row: {
+          id: string
+          agent_id: string
+          rating: number
+          comment: string
+          status: string
+          request_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          agent_id: string
+          rating: number
+          comment?: string
+          status?: string
+          request_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          agent_id?: string
+          rating?: number
+          comment?: string
+          status?: string
+          request_id?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       agents: {
         Row: {
           is_published: boolean
@@ -222,7 +252,10 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      agent_review_summary: {
+        Row: { agent_id: string; review_count: number; average_rating: number }
+        Relationships: []
+      }
     }
     Functions: {
       submit_public_intake: {
